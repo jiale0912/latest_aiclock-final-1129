@@ -209,6 +209,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
             android:text="View alarm" />
+
         <Button
             android:id="@+id/delete_data"
             android:layout_width="wrap_content"

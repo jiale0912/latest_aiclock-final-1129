@@ -1,6 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.alarmmanagerclock">
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION"/>
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
@@ -10,6 +11,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
 <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"></uses-permission>
 <application
 android:allowBackup="true"
 android:label="@string/app_name"
@@ -25,11 +27,11 @@ android:supportsRtl="true"
     android:theme="@android:style/Theme.Translucent.NoTitleBar"
     ></activity>
     <activity android:name=".imagedisplay">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+<!--        <intent-filter>-->
+<!--            <action android:name="android.intent.action.MAIN" />-->
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+<!--            <category android:name="android.intent.category.LAUNCHER" />-->
+<!--        </intent-filter>-->
     </activity>
     <activity android:name=".Classify"
         ></activity>

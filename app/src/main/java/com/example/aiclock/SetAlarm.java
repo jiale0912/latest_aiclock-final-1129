@@ -30,7 +30,10 @@ import com.bigkoo.pickerview.view.TimePickerView;
 import com.example.alarmmanagerclock.AlarmManagerUtil;
 import com.example.aiclock.view.SelectRemindCyclePopup;
 import com.example.aiclock.view.SelectRemindWayPopup;
+
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.prefs.Preferences;
 
@@ -47,13 +50,16 @@ public class SetAlarm extends AppCompatActivity implements View.OnClickListener 
     private static final int request_code= 0;
     public static final String EXTRA_REPLY = "com.example.aiclock.extra.REPLY";
     public static Uri uri;
-    private static int alarmid =0;
+    private static int alarmid;
     myDbAdapter db;
+    private SharedPreferences alarm_ID;
+    private String sharedPrefFile = "com.example.aiclock";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.set_alarm);
+        alarm_ID = getSharedPreferences(sharedPrefFile,MODE_PRIVATE);
         delete_data = (Button) findViewById(R.id.delete_data);
         delete_data.setOnClickListener(this);
         view_data = (Button) findViewById(R.id.btn_viewdata);
@@ -77,6 +83,7 @@ public class SetAlarm extends AppCompatActivity implements View.OnClickListener 
         tv_ring_value = (TextView) findViewById(R.id.tv_ring_value);
         tv_alarm_label = (TextView) findViewById(R.id.label_value);
         tv_soundtrack_value = (TextView) findViewById(R.id.label_soundValue);
+        alarmid = alarm_ID.getInt("alarmid",alarmid);
         db = new myDbAdapter(this);
 //        pvTime = new TimePickerView(this, TimePickerView.Type.HOURS_MINS);
 //        pvTime.setTime(new Date());
@@ -142,7 +149,9 @@ public class SetAlarm extends AppCompatActivity implements View.OnClickListener 
                 finish();
                 break;
             case R.id.btn_viewdata:
-//                Toast.makeText(this, db.alldata().toString(), Toast.LENGTH_SHORT).show();
+                SharedPreferences.Editor preferencesEditor = alarm_ID.edit();
+                preferencesEditor.clear();
+                preferencesEditor.apply();
                 break;
             case R.id.delete_data:
                 db.deleteall(this);
@@ -288,27 +297,33 @@ public class SetAlarm extends AppCompatActivity implements View.OnClickListener 
             return hasnull;
         }
     private void setClock() {
-
+        String weeklength = tv_repeat_value.getText().toString();
        if (checknull() == 0) {
            if (time != null && time.length() > 0) {
                String[] times = time.split(":");
                if (cycle == 0) {//是每天的闹钟
                    alarmid++;
-                   if(db.insertData(alarmid,Integer.parseInt(times[0]), Integer.parseInt(times[1]),tv_alarm_label.getText().toString(),0,ring,String.valueOf(uri),1,0)){
+                   if(db.insertData(alarmid,Integer.parseInt(times[0]), Integer.parseInt(times[1]),tv_alarm_label.getText().toString(),"0",ring,String.valueOf(uri),1,0,weeklength)){
 //                       AlarmManagerUtil.setAlarm(this, 0, Integer.parseInt(times[0]), Integer.parseInt
 //                               (times[1]), 0, 0, tv_alarm_label.getText().toString(), ring,uri);
                        Toast.makeText(this, uri.toString(), Toast.LENGTH_SHORT).show();
+                       SharedPreferences.Editor preferencesEditor = alarm_ID.edit();
+                       preferencesEditor.putInt("alarmid",alarmid);
+                       preferencesEditor.apply();
                    }
 
                }
               else if (cycle == -1) {//是只响一次的闹钟
                   alarmid++;
-                    if(db.insertData(alarmid,Integer.parseInt(times[0]), Integer.parseInt(times[1]),tv_alarm_label.getText().toString(),0,ring,String.valueOf(uri),1,1))
+                    if(db.insertData(alarmid,Integer.parseInt(times[0]), Integer.parseInt(times[1]),tv_alarm_label.getText().toString(),"0",ring,String.valueOf(uri),1,1,weeklength))
                    {
                        Toast.makeText(this, "Alarm on", Toast.LENGTH_SHORT).show();
 //                      AlarmManagerUtil.setAlarm(this, 1, Integer.parseInt(times[0]), Integer.parseInt
 //                               (times[1]), 0, 0, tv_alarm_label.getText().toString(), ring,uri);
                  test_sound.setText(uri.toString());
+                       SharedPreferences.Editor preferencesEditor = alarm_ID.edit();
+                       preferencesEditor.putInt("alarmid",alarmid);
+                       preferencesEditor.apply();
                    }
                     else{
                         Toast.makeText(this, "error", Toast.LENGTH_SHORT).show();
@@ -318,16 +333,24 @@ public class SetAlarm extends AppCompatActivity implements View.OnClickListener 
                   alarmid++;
                    String weeksStr = parseRepeat(cycle, 1);
                    String[] weeks = weeksStr.split(",");
+                   ArrayList<String> week = new ArrayList<>();
+                   week.add(weeksStr);
+                   if(db.insertData(alarmid,Integer.parseInt(times[0]), Integer.parseInt(times[1]),tv_alarm_label.getText().toString(),weeksStr,ring,String.valueOf(uri),1,2,weeklength))
+                   {
 
-                   for (int i = 0; i < weeks.length; i++) {
-
-                       if(db.insertData(alarmid,Integer.parseInt(times[0]), Integer.parseInt(times[1]),tv_alarm_label.getText().toString(),Integer.parseInt(weeks[i]),ring,String.valueOf(uri),1,2))
-                       {
-                           Toast.makeText(this, "set", Toast.LENGTH_SHORT).show();
-                       }
-                           AlarmManagerUtil.setAlarm(this, 2, Integer.parseInt(times[0]), Integer
-                               .parseInt(times[1]), i, Integer.parseInt(weeks[i]), tv_alarm_label.getText().toString(), ring,uri);
+                       SharedPreferences.Editor preferencesEditor = alarm_ID.edit();
+                       preferencesEditor.putInt("alarmid",alarmid++);
+                       preferencesEditor.apply();
                    }
+//                   for (int i = 0; i < weeks.length; i++) {
+//
+//                       if(db.insertData(alarmid,Integer.parseInt(times[0]), Integer.parseInt(times[1]),tv_alarm_label.getText().toString(),Integer.parseInt(weeks[i]),ring,String.valueOf(uri),1,2))
+//                       {
+//                           Toast.makeText(this, "set", Toast.LENGTH_SHORT).show();
+//                       }
+//                           AlarmManagerUtil.setAlarm(this, 2, Integer.parseInt(times[0]), Integer
+//                               .parseInt(times[1]), i, Integer.parseInt(weeks[i]), tv_alarm_label.getText().toString(), ring,uri);
+//                   }
                }
 //               Toast.makeText(this, uri.toString(), Toast.LENGTH_LONG).show();
 

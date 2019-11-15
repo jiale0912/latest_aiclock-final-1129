@@ -4,17 +4,23 @@ import android.app.Activity;
 import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.View;
 
 import java.io.IOException;
+import java.net.URI;
 
 
 public class ClockAlarmActivity extends Activity {
     private MediaPlayer mediaPlayer;
     private Vibrator vibrator;
+    private String mysound;
+    private Uri soundtrack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,22 +28,28 @@ public class ClockAlarmActivity extends Activity {
         setContentView(R.layout.activity_clock_alarm);
         String message = this.getIntent().getStringExtra("msg");
         int flag = this.getIntent().getIntExtra("flag", 0);
-        Uri soundtrack = Uri.parse(this.getIntent().getStringExtra("soundtrack"));
-        showDialogInBroadcastReceiver(message, flag, soundtrack);
+        mysound = this.getIntent().getStringExtra("soundtrack");
+        soundtrack = Uri.parse(mysound);
+        showDialogInBroadcastReceiver(message, flag, mysound);
+        mediaPlayer = new MediaPlayer();
+
+
     }
 
-    private void showDialogInBroadcastReceiver(String message, final int flag, Uri soundtrack) {
+    private void showDialogInBroadcastReceiver(String message, final int flag, String mysound) {
+      Uri testing = Uri.parse(mysound);
         if (flag == 1 || flag == 2) {
-            mediaPlayer = new MediaPlayer();
-            try {
-               mediaPlayer.setDataSource(this, soundtrack);
-                mediaPlayer.setVolume(100,100);
-                mediaPlayer.setLooping(true);
-                mediaPlayer.prepare();
-                mediaPlayer.start();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            RingtoneManager.getRingtone(getApplicationContext(),testing).play();
+//            try {
+//            Log.d("alarm rang",testing.toString());
+//               mediaPlayer.setDataSource(this, testing);
+//                mediaPlayer.setLooping(true);
+//                mediaPlayer.prepare();
+//                mediaPlayer.start();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                Log.d("Alarm error","media player cant run");
+//            }
         }
         //数组参数意义：第一个参数为等待指定时间后开始震动，震动时间为第二个参数。后边的参数依次为等待震动和震动的时间
         //第二个参数为重复次数，-1为不重复，0为一直震动
@@ -48,7 +60,7 @@ public class ClockAlarmActivity extends Activity {
 
         final SimpleDialog dialog = new SimpleDialog(this, R.style.Theme_dialog);
         dialog.show();
-        dialog.setTitle("Alarm");
+        dialog.setTitle(soundtrack.toString());
         dialog.setMessage(message);
         dialog.setClickListener(new View.OnClickListener() {
             @Override
@@ -56,7 +68,6 @@ public class ClockAlarmActivity extends Activity {
                 if (dialog.bt_confirm == v || dialog.bt_cancel == v) {
 
                     if (flag == 1 || flag == 2) {
-
                       mediaPlayer.stop();
                        mediaPlayer.release();
                     }

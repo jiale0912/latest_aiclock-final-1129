@@ -20,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
+import android.widget.DigitalClock;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     private AlarmListAdapter adapter;
     private TextView alarminfo;
     private Switch mySwitch;
+    private ClockView myClock;
+    private DigitalClock myDigitalClock;
 
 
 
@@ -68,8 +71,9 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         final myDbAdapter myDB = new myDbAdapter(this);
         alarminfo = (TextView) findViewById(R.id.alarmstatus);
+        myClock = findViewById(R.id.clockView);
+        myDigitalClock = findViewById(R.id.digitalClock);
         list_array = new ArrayList<>();
-        mySwitch = (Switch) findViewById(R.id.alarm_switch);
         myList = findViewById(R.id.alarm_list);
         viewData();
 
@@ -131,6 +135,27 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+            myClock.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(myClock.getVisibility() == View.VISIBLE) {
+                        myClock.setVisibility(View.INVISIBLE);
+                        myDigitalClock.setVisibility(View.VISIBLE);
+
+                    }
+                }
+            });
+
+            myDigitalClock.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(myDigitalClock.getVisibility() == View.VISIBLE)
+                    {
+                        myDigitalClock.setVisibility(View.INVISIBLE);
+                        myClock.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
 // set creator
 
         myList.setMenuCreator(creator);
@@ -145,10 +170,15 @@ public class MainActivity extends AppCompatActivity {
                        Toast.makeText(MainActivity.this, "add", Toast.LENGTH_SHORT).show();
                        break;
                    case 1:
-                        myDB.delete(alarm.getId());
-                       Toast.makeText(MainActivity.this, "delete", Toast.LENGTH_SHORT).show();
+                       myDB.delete(alarm.getId());
+                       Toast.makeText(MainActivity.this, String.valueOf(alarm.getId()), Toast.LENGTH_SHORT).show();
                        onResume();
                        viewData();
+//                       String value = String.valueOf(alarm.getId());
+//                       myDB.delete(value);
+//                       onResume();
+//                       Toast.makeText(MainActivity.this, value, Toast.LENGTH_SHORT).show();
+
                         break;
                    default:
                        break;

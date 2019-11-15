@@ -24,30 +24,29 @@
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
     <loaded-nodes>
-      <connection connection-id="e7bdcb5a-d1c9-4594-ac89-f206d3bf621e">
-        <schema name="main" object-types="constraint, index, dataset trigger, table, column" />
+      <connection connection-id="3075fe9b-600d-4a2c-8f4c-f756692132e6">
+        <schema name="main" object-types="view, table" />
       </connection>
     </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
-    <connection id="e7bdcb5a-d1c9-4594-ac89-f206d3bf621e">
-      <console name="Connection 1" type="STANDARD" schema="main" session="Main">SELECT DISTICNT FROM &quot;myAlarm&quot;</console>
+    <connection id="3075fe9b-600d-4a2c-8f4c-f756692132e6">
+      <console name="database" type="STANDARD" schema="main" session="Main" />
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files>
-      <object connection-id="e7bdcb5a-d1c9-4594-ac89-f206d3bf621e" object-ref="schemas/main/tables/myAlarm" />
-    </open-files>
+    <open-files />
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
-    <connection id="e7bdcb5a-d1c9-4594-ac89-f206d3bf621e" />
+    <connection id="3075fe9b-600d-4a2c-8f4c-f756692132e6" />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
-    <filter-actions connection-id="e7bdcb5a-d1c9-4594-ac89-f206d3bf621e" dataset="main.myAlarm" active-filter-id="EMPTY_FILTER" />
-    <filter-actions connection-id="e7bdcb5a-d1c9-4594-ac89-f206d3bf621e" dataset="main.android_metadata" active-filter-id="" />
+    <filter-actions connection-id="3075fe9b-600d-4a2c-8f4c-f756692132e6" dataset="main.myAlarm" active-filter-id="EMPTY_FILTER" />
   </component>
   <component name="DBNavigator.Project.EditorStateManager">
-    <last-used-providers />
+    <last-used-providers>
+      <object-type object-type="TABLE" editor-provider="DATA" />
+    </last-used-providers>
   </component>
   <component name="DBNavigator.Project.MethodExecutionManager">
     <method-browser />
@@ -65,13 +64,15 @@
     <filters />
   </component>
   <component name="DBNavigator.Project.ScriptExecutionManager" clear-outputs="true">
-    <recently-used-interfaces />
+    <recently-used-interfaces>
+      <mapping database-type="SQLITE" interface-id="DEFAULT" />
+    </recently-used-interfaces>
   </component>
   <component name="DBNavigator.Project.Settings">
     <connections>
-      <connection id="e7bdcb5a-d1c9-4594-ac89-f206d3bf621e" active="true">
+      <connection id="3075fe9b-600d-4a2c-8f4c-f756692132e6" active="true">
         <database>
-          <name value="Connection 1" />
+          <name value="database" />
           <description value="" />
           <database-type value="SQLITE" />
           <config-type value="BASIC" />
