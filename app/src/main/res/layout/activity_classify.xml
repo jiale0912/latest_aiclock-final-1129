@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Classify"
+    tools:context="com.example.aiclock.ai.Classify"
     >
 
     <ImageView
@@ -16,8 +16,9 @@
         android:layout_marginTop="44dp"
         android:layout_below="@id/selected_image"
         app:srcCompat="@android:color/background_light"
-        android:background="@drawable/custom_views"/>
-
+        />
+<!--    android:background="@drawable/custom_views-->
+<!--    android:background="@drawable/custome_button"-->
     <Button
         android:id="@+id/classify_image"
         android:layout_width="168dp"
@@ -25,7 +26,6 @@
         android:layout_below="@id/selected_image"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:background="@drawable/custome_button"
         android:text="Classify!" />
 
     <LinearLayout

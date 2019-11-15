@@ -1,4 +1,4 @@
-package com.example.alarmmanagerclock;
+package com.example.aiclock.alarmmanager;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.example.aiclock.R;
 
 public class SimpleDialog extends Dialog {
     protected static int default_width = WindowManager.LayoutParams.WRAP_CONTENT; // 默认宽度

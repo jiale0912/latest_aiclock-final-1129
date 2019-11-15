@@ -1,4 +1,4 @@
-package com.example.alarmmanagerclock;
+package com.example.aiclock.ai;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.aiclock.R;
 
 import java.util.Random;
 

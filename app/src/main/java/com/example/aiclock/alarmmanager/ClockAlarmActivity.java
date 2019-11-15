@@ -1,19 +1,19 @@
-package com.example.alarmmanagerclock;
+package com.example.aiclock.alarmmanager;
 
 import android.app.Activity;
 import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
 
+import com.example.aiclock.R;
+import com.example.aiclock.ai.imagedisplay;
+
 import java.io.IOException;
-import java.net.URI;
 
 
 public class ClockAlarmActivity extends Activity {
@@ -30,26 +30,25 @@ public class ClockAlarmActivity extends Activity {
         int flag = this.getIntent().getIntExtra("flag", 0);
         mysound = this.getIntent().getStringExtra("soundtrack");
         soundtrack = Uri.parse(mysound);
-        showDialogInBroadcastReceiver(message, flag, mysound);
-        mediaPlayer = new MediaPlayer();
+        showDialogInBroadcastReceiver(message, flag, soundtrack);
 
 
     }
 
-    private void showDialogInBroadcastReceiver(String message, final int flag, String mysound) {
-      Uri testing = Uri.parse(mysound);
+    private void showDialogInBroadcastReceiver(String message, final int flag, Uri soundtrack) {
+
         if (flag == 1 || flag == 2) {
-            RingtoneManager.getRingtone(getApplicationContext(),testing).play();
-//            try {
-//            Log.d("alarm rang",testing.toString());
-//               mediaPlayer.setDataSource(this, testing);
-//                mediaPlayer.setLooping(true);
-//                mediaPlayer.prepare();
-//                mediaPlayer.start();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//                Log.d("Alarm error","media player cant run");
-//            }
+            try {
+                mediaPlayer = new MediaPlayer();
+
+               mediaPlayer.setDataSource(getApplicationContext(), soundtrack);
+                mediaPlayer.setLooping(true);
+                mediaPlayer.prepare();
+                mediaPlayer.start();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.d("Alarm error","media player cant run");
+            }
         }
         //数组参数意义：第一个参数为等待指定时间后开始震动，震动时间为第二个参数。后边的参数依次为等待震动和震动的时间
         //第二个参数为重复次数，-1为不重复，0为一直震动
@@ -75,7 +74,7 @@ public class ClockAlarmActivity extends Activity {
 
                         vibrator.cancel();
                     }
-                    Intent intent = new Intent(getApplicationContext(),imagedisplay.class);
+                    Intent intent = new Intent(getApplicationContext(), imagedisplay.class);
                     startActivity(intent);
                     dialog.dismiss();
                     finish();

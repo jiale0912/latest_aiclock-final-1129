@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -13,7 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.example.alarmmanagerclock.AlarmManagerUtil;
+import com.example.aiclock.alarmmanager.AlarmManagerUtil;
 
 import java.util.ArrayList;
 import java.util.List;

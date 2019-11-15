@@ -1,4 +1,4 @@
-package com.example.alarmmanagerclock;
+package com.example.aiclock.ai;
 
 import android.Manifest;
 import android.content.ContentValues;
@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.aiclock.R;
 import com.soundcloud.android.crop.Crop;
 
 import java.io.File;

@@ -5,26 +5,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:visibility="visible"
-    tools:context=".imagedisplay">
+    tools:context="com.example.aiclock.ai.imagedisplay">
 
     <Button
         android:id="@+id/camera_open"
         android:layout_width="203dp"
         android:layout_height="0dp"
         android:layout_marginBottom="244dp"
-        android:background="@drawable/custome_button"
+
         android:text="snooze alarm "
         android:textColor="@color/colorWhite"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
+<!--    android:background="@drawable/custome_button"  android:background="@drawable/custome_button"-->
     <Button
         android:id="@+id/nextItem"
         android:layout_width="203dp"
         android:layout_height="0dp"
         android:layout_marginBottom="180dp"
-        android:background="@drawable/custome_button"
+
         android:text="Try Other item? "
         android:textColor="@color/colorWhite"
         android:visibility="invisible"

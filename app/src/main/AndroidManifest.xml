@@ -37,6 +37,28 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver android:name="com.example.aiclock.alarmmanager.AlarmReceiver">
+            <intent-filter>
+                <action android:name="com.loong.alarm.clock"/>
+            </intent-filter>
+        </receiver>
+        <activity
+            android:name=".alarmmanager.ClockAlarmActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            ></activity>
+        <activity android:name=".ai.imagedisplay">
+            <!--        <intent-filter>-->
+            <!--            <action android:name="android.intent.action.MAIN" />-->
+
+            <!--            <category android:name="android.intent.category.LAUNCHER" />-->
+            <!--        </intent-filter>-->
+        </activity>
+        <activity android:name=".ai.Classify"
+            ></activity>
+        <activity android:name=".ai.ChooseModel"></activity>
+        <activity android:name="com.soundcloud.android.crop.CropImageActivity" android:screenOrientation="portrait"/>
+
     </application>
 
 </manifest>

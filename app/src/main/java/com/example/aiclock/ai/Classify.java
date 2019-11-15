@@ -1,4 +1,4 @@
-package com.example.alarmmanagerclock;
+package com.example.aiclock.ai;
 
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
@@ -14,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.aiclock.R;
 
 import org.tensorflow.lite.Interpreter;
 
