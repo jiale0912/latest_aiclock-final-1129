@@ -51,12 +51,13 @@
         android:textAlignment="center"
         android:textSize="24dp"
         android:timeZone="Asia/Kuala_Lumpur"
-
+android:layout_marginTop="12dp"
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/clockView"
-        app:layout_constraintBottom_toTopOf="@+id/alarm_list"/>
+        app:layout_constraintBottom_toTopOf="@+id/alarm_list"
+        tools:ignore="UnknownIdInLayout" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

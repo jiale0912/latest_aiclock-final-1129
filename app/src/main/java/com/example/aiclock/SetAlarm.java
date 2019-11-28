@@ -95,6 +95,9 @@ public class SetAlarm extends AppCompatActivity implements View.OnClickListener 
                 .setLabel("","","","","","")
                 .setTitleText("Choose your time")
                 .setTextColorCenter(getResources().getColor(R.color.colorLightBlue))
+                .setContentTextSize(24)
+                .setCancelColor(getResources().getColor(R.color.colorRed))
+
 
                 .build();
         //时间选择后回调
@@ -295,7 +298,7 @@ public class SetAlarm extends AppCompatActivity implements View.OnClickListener 
        if (checknull() == 0) {
            if (time != null && time.length() > 0) {
                String[] times = time.split(":");
-               if (cycle == 0) {//是每天的闹钟
+               if (cycle == 0) {//EveryDay
                    alarmid++;
                    if(db.insertData(alarmid,Integer.parseInt(times[0]), Integer.parseInt(times[1]),tv_alarm_label.getText().toString(),"0",ring,uri.toString(),1,0,weeklength,0)){
 //                       AlarmManagerUtil.setAlarm(this, 0, Integer.parseInt(times[0]), Integer.parseInt
@@ -307,7 +310,7 @@ public class SetAlarm extends AppCompatActivity implements View.OnClickListener 
                    }
 
                }
-              else if (cycle == -1) {//是只响一次的闹钟
+              else if (cycle == -1) {//Only Once
                   alarmid++;
                     if(db.insertData(alarmid,Integer.parseInt(times[0]), Integer.parseInt(times[1]),tv_alarm_label.getText().toString(),"0",ring,uri.toString(),1,1,weeklength,0))
                    {
@@ -322,7 +325,7 @@ public class SetAlarm extends AppCompatActivity implements View.OnClickListener 
                         Toast.makeText(this, "error", Toast.LENGTH_SHORT).show();
                     }
 
-               } else {//多选，周几的闹钟
+               } else {//Specific Date
                   alarmid++;
                    String weeksStr = parseRepeat(cycle, 1);
                    String[] weeks = weeksStr.split(",");
@@ -365,31 +368,31 @@ public class SetAlarm extends AppCompatActivity implements View.OnClickListener 
             @Override
             public void obtainMessage(int flag, String ret) {
                 switch (flag) {
-                    // 星期一
+                    // Mon
                     case 0:
 
                         break;
-                    // 星期二
+                    // Tue
                     case 1:
 
                         break;
-                    // 星期三
+                    // Wed
                     case 2:
 
                         break;
-                    // 星期四
+                    // Thu
                     case 3:
 
                         break;
-                    // 星期五
+                    // Fri
                     case 4:
 
                         break;
-                    // 星期六
+                    // Sat
                     case 5:
 
                         break;
-                    // 星期日
+                    // Sun
                     case 6:
 
                         break;
@@ -427,12 +430,12 @@ public class SetAlarm extends AppCompatActivity implements View.OnClickListener 
             @Override
             public void obtainMessage(int flag) {
                 switch (flag) {
-                    // 震动
+                    // Vibrate
                     case 0:
                         tv_ring_value.setText("Vibrate");
                         ring = 0;
                         break;
-                    // 铃声
+                    // Sound
                     case 1:
                         tv_ring_value.setText("Sound");
                         ring = 1;
@@ -469,8 +472,8 @@ public class SetAlarm extends AppCompatActivity implements View.OnClickListener 
         });
     }
     /**
-     * @param repeat 解析二进制闹钟周期
-     * @param flag   flag=0返回带有汉字的周一，周二cycle等，flag=1,返回weeks(1,2,3)
+     * @param repeat
+     * @param flag
      * @return
      */
     public static String parseRepeat(int repeat, int flag) {

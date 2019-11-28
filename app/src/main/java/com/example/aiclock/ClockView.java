@@ -69,6 +69,7 @@ public class ClockView extends View {
 
     private void drawHand(Canvas canvas, double loc, boolean isHour) {
         double angle = Math.PI * loc / 30 - Math.PI / 2;
+        paint.setColor(getResources().getColor(android.R.color.darker_gray));
         int handRadius = isHour ? radius - handTruncation - hourHandTruncation : radius - handTruncation;
         canvas.drawLine(width / 2, height / 2,
                 (float) (width / 2 + Math.cos(angle) * handRadius),

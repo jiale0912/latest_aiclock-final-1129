@@ -38,13 +38,13 @@ public class AlarmManagerUtil {
     /**
      * @param flag            周期性时间间隔的标志,flag = 0 表示一次性的闹钟, flag = 1 表示每天提醒的闹钟(1天的时间间隔),flag = 2
      *                        表示按周每周提醒的闹钟（一周的周期性时间间隔）
-     * @param hour            时
-     * @param minute          分
-     * @param id              闹钟的id
-     * @param week            week=0表示一次性闹钟或者按天的周期性闹钟，非0 的情况下是几就代表以周为周期性的周几的闹钟
-     * @param tips            闹钟提示信息
-     * @param soundOrVibrator 2表示声音和震动都执行，1表示只有铃声提醒，0表示只有震动提醒
-     * @param soundtrack the soundtrack for the alarm
+     * @param hour            Hour
+     * @param minute          Min
+     * @param id              Alarm id
+     * @param week            0 = Only Once / Everyday, !0 = Specific Day
+     * @param tips            Alarm Tips
+     * @param soundOrVibrator 2 = Sound + Vibrate, 1 = sound, 0 = vibrate2
+     * @param soundtrack      Soundtrack for the alarm
      */
     public static void setAlarm(Context context, int flag, int hour, int minute, int id, int
             week, String tips, int soundOrVibrator, String soundtrack) {
@@ -83,9 +83,9 @@ public class AlarmManagerUtil {
 
 
     /**
-     * @param weekflag 传入的是周几
-     * @param dateTime 传入的是时间戳（设置当天的年月日+从选择框拿来的时分秒）
-     * @return 返回起始闹钟时间的时间戳
+     * @param weekflag The Days of Week
+     * @param dateTime Time of the Alarm
+     * @return
      */
     private static long calMethod(int weekflag, long dateTime) {
         long time = 0;

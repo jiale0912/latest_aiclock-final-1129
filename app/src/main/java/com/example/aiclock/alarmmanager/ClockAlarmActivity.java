@@ -66,8 +66,7 @@ public class ClockAlarmActivity extends Activity {
         //数组参数意义：第一个参数为等待指定时间后开始震动，震动时间为第二个参数。后边的参数依次为等待震动和震动的时间
         //第二个参数为重复次数，-1为不重复，0为一直震动
 //        if (flag == 0 || flag == 2) {
-        vibrator = (Vibrator) this.getSystemService(Service.VIBRATOR_SERVICE);
-        vibrator.vibrate(new long[]{100, 10, 100, 600}, 0);
+
 
 //       }
 

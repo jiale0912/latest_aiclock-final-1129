@@ -258,5 +258,7 @@ imagedisplay extends AppCompatActivity {
         stopService(music);
     }
 
-
+    @Override
+    public void onBackPressed() {
+    }
 }

@@ -54,6 +54,8 @@
         private Button set_btn, btn_cancel_set, view_data, delete_data;
         String[] weeks;
         String myweek;
+        String myMin;
+        String myHour;
         Alarm mAlarm;
         private  int id;
         public static Uri uri;
@@ -83,9 +85,21 @@
             mAlarm = alarms.get(0);
             if(mAlarm.getMin()<10)
             {
-                String minute = "0" + mAlarm.getMin();
+                myMin = "0" + mAlarm.getMin();
             }
-            date_tv.setText(String.valueOf(mAlarm.getHour()) + ":" + String.valueOf(mAlarm.getMin()));
+            else
+            {
+                myMin = String.valueOf(mAlarm.getMin());
+            }
+            if(mAlarm.getHour()<10)
+            {
+                myHour = "0" + mAlarm.getHour();
+            }
+            else
+            {
+                myHour = String.valueOf(mAlarm.getHour());
+            }
+            date_tv.setText(myHour + ":" + myMin);
             tv_repeat.setText(mAlarm.getWeeklength());
             time = mAlarm.getHour() + ":" + mAlarm.getMin();
             times = new String[] {String.valueOf(mAlarm.getHour()),String.valueOf(mAlarm.getMin())};
