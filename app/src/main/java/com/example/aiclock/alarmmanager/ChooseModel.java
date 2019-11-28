@@ -1,15 +1,18 @@
 package com.example.aiclock.alarmmanager;
 
 import android.Manifest;
+import android.content.ComponentName;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.provider.MediaStore;
-
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -43,16 +46,21 @@ public class ChooseModel extends AppCompatActivity {
 
     //boolean value dictating if chosen model is quantized version or not.
     private boolean quant;
-
+    private String mysong;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_model);
-
+        mysong = this.getIntent().getStringExtra("soundtrack");
+        doBindService();
+        Intent music = new Intent();
+        music.setClass(this,MusicService.class);
+        music.putExtra("soundtrack",mysong);
+        startService(music);
         // request permission to use the camera on the user's phone
-        if (ActivityCompat.checkSelfPermission(this.getApplicationContext(), android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this, new String[] {android.Manifest.permission.CAMERA}, REQUEST_PERMISSION);
+        if (ActivityCompat.checkSelfPermission(this.getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA}, REQUEST_PERMISSION);
         }
 
         // request permission to write data (aka images) to the user's external storage of their phone
@@ -135,7 +143,55 @@ public class ChooseModel extends AppCompatActivity {
             // put model type in extras
             i.putExtra("quant", quant);
             // send other required data
+            i.putExtra("soundtrack",mysong);
             startActivity(i);
         }
+    }
+    //Bind/Unbind music service
+    private boolean mIsBound = false;
+    private MusicService mServ;
+    private ServiceConnection Scon =new ServiceConnection(){
+
+        public void onServiceConnected(ComponentName name, IBinder
+                binder) {
+            mServ = ((MusicService.ServiceBinder)binder).getService();
+        }
+
+        public void onServiceDisconnected(ComponentName name) {
+            mServ = null;
+        }
+    };
+
+    void doBindService(){
+        bindService(new Intent(this, MusicService.class),
+                Scon, Context.BIND_AUTO_CREATE);
+        mIsBound = true;
+    }
+
+    void doUnbindService()
+    {
+        if(mIsBound)
+        {
+            unbindService(Scon);
+            mIsBound = false;
+        }
+    }
+    @Override
+    protected void onResume(){
+        super.onResume();
+        if(mServ != null)
+        {
+            mServ.resumeMusic();
+        }
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+
+        doUnbindService();
+        Intent music = new Intent();
+        music.setClass(this, MusicService.class);
+        stopService(music);
     }
 }

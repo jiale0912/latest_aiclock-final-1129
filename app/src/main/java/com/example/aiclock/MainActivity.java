@@ -11,7 +11,7 @@ import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.example.aiclock.alarmmanager.AlarmManagerUtil;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
+import androidx.transition.*;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -19,10 +19,12 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.DigitalClock;
 import android.widget.Switch;
+import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +40,8 @@ public class MainActivity extends AppCompatActivity {
     private Switch mySwitch;
     private ClockView myClock;
     private DigitalClock myDigitalClock;
-
+    private TextClock myTextClock;
+    private int off;
 
 
     @Override
@@ -48,14 +51,14 @@ public class MainActivity extends AppCompatActivity {
         adapter = new AlarmListAdapter(this,R.layout.alarm_card,list_array);
 
         myList.setAdapter(adapter);
-        if(myList.getCount()>0)
-        {
-            alarminfo.setText("Alarm on");
-        }
-        else
-        {
-            alarminfo.setText("No Alarm On");
-        }
+//        if(myList.getCount()>0)
+//        {
+//            alarminfo.setText("Alarm on");
+//        }
+//        else
+//        {
+//            alarminfo.setText("No Alarm On");
+//        }
     }
 
     @Override
@@ -68,14 +71,24 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        final ViewGroup transitionsContainer = (ViewGroup) findViewById(R.id.transitioncontainer);
+        myTextClock = transitionsContainer.findViewById(R.id.textclock);
+        myClock = transitionsContainer.findViewById(R.id.clockView);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         final myDbAdapter myDB = new myDbAdapter(this);
-        alarminfo = (TextView) findViewById(R.id.alarmstatus);
+        myTextClock = findViewById(R.id.textclock);
         myClock = findViewById(R.id.clockView);
-        myDigitalClock = findViewById(R.id.digitalClock);
+//        myDigitalClock = findViewById(R.id.digitalClock);
         list_array = new ArrayList<>();
         myList = findViewById(R.id.alarm_list);
+//        off = this.getIntent().getIntExtra("off",0);
+//        if(off == 1)
+//        {
+//            android.os.Process.killProcess(android.os.Process.myPid());
+//                       System.exit(0);
+//                       finish();
+//        }
         viewData();
 
         adapter = new AlarmListAdapter(this,R.layout.alarm_card,list_array);
@@ -83,14 +96,14 @@ public class MainActivity extends AppCompatActivity {
         myList.setAdapter(adapter);
 adapter.notifyDataSetChanged();
 
-        if(myList.getCount()>0)
-        {
-            alarminfo.setText("Alarm on");
-        }
-        else
-        {
-            alarminfo.setText("No Alarm On");
-        }
+//        if(myList.getCount()>0)
+//        {
+//            alarminfo.setText("Alarm on");
+//        }
+//        else
+//        {
+//            alarminfo.setText("No Alarm On");
+//        }
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,22 +151,33 @@ adapter.notifyDataSetChanged();
         };
 
             myClock.setOnClickListener(new View.OnClickListener() {
+                boolean visible;
                 @Override
                 public void onClick(View v) {
+
+                    TransitionManager.beginDelayedTransition(transitionsContainer,new Fade().setDuration(300).setStartDelay(100))   ;
+                    visible = !visible;
+//                    myTextClock.setVisibility(visible ? View.VISIBLE: View.GONE);
+//                    myClock.setVisibility(!visible ? View.INVISIBLE : View.GONE);
                     if(myClock.getVisibility() == View.VISIBLE) {
                         myClock.setVisibility(View.INVISIBLE);
-                        myDigitalClock.setVisibility(View.VISIBLE);
+                        myTextClock.setVisibility(View.VISIBLE);
+
 
                     }
                 }
             });
 
-            myDigitalClock.setOnClickListener(new View.OnClickListener() {
+            myTextClock.setOnClickListener(new View.OnClickListener() {
+                boolean visible;
                 @Override
                 public void onClick(View v) {
-                    if(myDigitalClock.getVisibility() == View.VISIBLE)
+                    TransitionManager.beginDelayedTransition(transitionsContainer,new Fade().setDuration(300).setStartDelay(100))   ;
+                    visible = !visible;
+
+                    if(myTextClock.getVisibility() == View.VISIBLE)
                     {
-                        myDigitalClock.setVisibility(View.INVISIBLE);
+                        myTextClock.setVisibility(View.INVISIBLE);
                         myClock.setVisibility(View.VISIBLE);
                     }
                 }

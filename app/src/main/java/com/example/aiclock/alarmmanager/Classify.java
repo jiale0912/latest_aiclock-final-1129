@@ -1,13 +1,16 @@
 package com.example.aiclock.alarmmanager;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
@@ -83,7 +86,7 @@ public class Classify extends AppCompatActivity {
     private TextView Confidence2;
     private TextView Confidence3;
     public String result1, result2, result3;
-    MediaPlayer mediaPlayer;
+    private String mysong;
 
     // priority queue that will hold the top results from the CNN
     private PriorityQueue<Map.Entry<String, Float>> sortedLabels =
@@ -101,7 +104,7 @@ public class Classify extends AppCompatActivity {
         // get all selected classifier data from classifiers
         chosen = (String) getIntent().getStringExtra("chosen");
         quant = (boolean) getIntent().getBooleanExtra("quant", false);
-
+        mysong = this.getIntent().getStringExtra("soundtrack");
         // initialize array that holds image data
         intValues = new int[DIM_IMG_SIZE_X * DIM_IMG_SIZE_Y];
 
@@ -135,7 +138,11 @@ public class Classify extends AppCompatActivity {
         }
 
         setContentView(R.layout.activity_classify);
-
+        doBindService();
+        Intent music = new Intent();
+        music.setClass(this,MusicService.class);
+        music.putExtra("soundtrack",mysong);
+        startService(music);
         // labels that hold top three results of CNN
         label1 = (TextView) findViewById(R.id.label1);
         label2 = (TextView) findViewById(R.id.label2);
@@ -180,6 +187,7 @@ public class Classify extends AppCompatActivity {
                 i.putExtra("result1",result1);
                 i.putExtra("result2",result2);
                 i.putExtra("result2",result3);
+                i.putExtra("soundtrack",mysong);
                 startActivity(i);
 
             }
@@ -299,5 +307,52 @@ public class Classify extends AppCompatActivity {
         Bitmap resizedBitmap = Bitmap.createBitmap(
                 bm, 0, 0, width, height, matrix, false);
         return resizedBitmap;
+    }
+    //Bind/Unbind music service
+    private boolean mIsBound = false;
+    private MusicService mServ;
+    private ServiceConnection Scon =new ServiceConnection(){
+
+        public void onServiceConnected(ComponentName name, IBinder
+                binder) {
+            mServ = ((MusicService.ServiceBinder)binder).getService();
+        }
+
+        public void onServiceDisconnected(ComponentName name) {
+            mServ = null;
+        }
+    };
+
+    void doBindService(){
+        bindService(new Intent(this, MusicService.class),
+                Scon, Context.BIND_AUTO_CREATE);
+        mIsBound = true;
+    }
+
+    void doUnbindService()
+    {
+        if(mIsBound)
+        {
+            unbindService(Scon);
+            mIsBound = false;
+        }
+    }
+    @Override
+    protected void onResume(){
+        super.onResume();
+        if(mServ != null)
+        {
+            mServ.resumeMusic();
+        }
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+
+        doUnbindService();
+        Intent music = new Intent();
+        music.setClass(this, MusicService.class);
+        stopService(music);
     }
 }

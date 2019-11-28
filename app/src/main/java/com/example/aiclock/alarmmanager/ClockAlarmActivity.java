@@ -12,19 +12,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.View;
 
 import com.example.aiclock.R;
-
-import java.io.IOException;
 
 
 public class ClockAlarmActivity extends Activity {
     private MediaPlayer mediaPlayer;
     private Vibrator vibrator;
     private String mysound;
-    private Uri soundtrack;
+    private Uri soundtrack2;
     private Ringtone rt;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +34,7 @@ public class ClockAlarmActivity extends Activity {
 //        int mysound = this.getIntent().getIntExtra("soundtrack",0);
         String ts = this.getIntent().getStringExtra("soundtrack");
         Uri sound = Uri.parse(ts);
+        soundtrack2 = sound;
         showDialogInBroadcastReceiver(message, flag,sound);
 
 
@@ -49,27 +47,27 @@ public class ClockAlarmActivity extends Activity {
 //                mediaPlayer.setLooping(true);
 //                mediaPlayer.start();
 
-//Intent music = new Intent();
-//        music.setClass(this,MusicService.class);
-//        music.putExtra("song",soundtrack.toString());
-//        startService(music);
-            try {
-                mediaPlayer = new MediaPlayer();
-
-               mediaPlayer.setDataSource(getApplicationContext(), soundtrack);
-                mediaPlayer.setLooping(true);
-                mediaPlayer.prepare();
-                mediaPlayer.start();
-            } catch (IOException e) {
-                e.printStackTrace();
-                Log.d("Alarm error","media player cant run");
-            }
+        Intent music = new Intent();
+        music.setClass(this, MusicService.class);
+        music.putExtra("soundtrack",soundtrack.toString());
+        startService(music);
+//            try {
+//                mediaPlayer = new MediaPlayer();
+//
+//               mediaPlayer.setDataSource(getApplicationContext(), soundtrack);
+//                mediaPlayer.setLooping(true);
+//                mediaPlayer.prepare();
+//                mediaPlayer.start();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                Log.d("Alarm error","media player cant run");
+//            }
 //        }
         //数组参数意义：第一个参数为等待指定时间后开始震动，震动时间为第二个参数。后边的参数依次为等待震动和震动的时间
         //第二个参数为重复次数，-1为不重复，0为一直震动
 //        if (flag == 0 || flag == 2) {
-            vibrator = (Vibrator) this.getSystemService(Service.VIBRATOR_SERVICE);
-            vibrator.vibrate(new long[]{100, 10, 100, 600}, 0);
+        vibrator = (Vibrator) this.getSystemService(Service.VIBRATOR_SERVICE);
+        vibrator.vibrate(new long[]{100, 10, 100, 600}, 0);
 
 //       }
 
@@ -84,6 +82,7 @@ public class ClockAlarmActivity extends Activity {
 
 
                     Intent intent = new Intent(getApplicationContext(), imagedisplay.class);
+                    intent.putExtra("soundtrack",soundtrack2.toString());
                     startActivity(intent);
 //                    if (flag == 1 || flag == 2) {
 //                        mediaPlayer.stop();
@@ -118,7 +117,7 @@ public class ClockAlarmActivity extends Activity {
     };
 
     void doBindService(){
-        bindService(new Intent(this,MusicService.class),
+        bindService(new Intent(this, MusicService.class),
                 Scon, Context.BIND_AUTO_CREATE);
         mIsBound = true;
     }
@@ -144,9 +143,9 @@ public class ClockAlarmActivity extends Activity {
     protected void onDestroy(){
         super.onDestroy();
 
-        doBindService();
+        doUnbindService();
         Intent music = new Intent();
-        music.setClass(this,MusicService.class);
+        music.setClass(this, MusicService.class);
         stopService(music);
     }
 }

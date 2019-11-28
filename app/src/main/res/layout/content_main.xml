@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/transitioncontainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
@@ -13,43 +14,49 @@
     <com.example.aiclock.ClockView
         android:id="@+id/clockView"
         android:layout_width="200dp"
-        android:layout_height="0dp"
+        android:layout_height="200dp"
         android:layout_centerInParent="true"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/alarmstatus"
+        app:layout_constraintBottom_toTopOf="@id/textclock2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <DigitalClock
-        android:id="@+id/digitalClock"
+
+
+    <TextClock
+        android:id="@+id/textclock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="54dp"
+        android:layout_marginTop="20dp"
+        android:format12Hour="hh:mm:ss"
+        android:format24Hour="hh:mm:ss"
         android:textAlignment="center"
-        android:textColor="@color/colorBlack"
         android:textSize="80dp"
+        android:timeZone="Asia/Kuala_Lumpur"
+
 
         android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@id/textclock2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></DigitalClock>
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/alarmstatus"
-        android:layout_width="0dp"
+    <TextClock
+        android:id="@+id/textclock2"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="54dp"
-        android:text="@string/no_alarms"
+        android:format12Hour="dd/MM/yyyy"
+        android:format24Hour="EEE dd/MM/yyyy"
         android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="@color/colorBlack"
-        android:textStyle="bold"
+        android:textSize="24dp"
+        android:timeZone="Asia/Kuala_Lumpur"
+
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/digitalClock" />
+        app:layout_constraintTop_toBottomOf="@+id/clockView"
+        app:layout_constraintBottom_toTopOf="@+id/alarm_list"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -25,12 +25,16 @@
 
         <service android:name=".alarmmanager.MusicService"
             android:enabled="true"/>
-        <activity android:name=".EditAlarm" />
+
+        <activity android:name=".EditAlarm"
+            android:label="Edit Alarm"/>
+
         <activity
             android:name=".SetAlarm"
             android:label="@string/set_alarm_name"
             >
-            ></activity>
+            </activity>
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -49,14 +53,31 @@
         </receiver>
 
         <activity
+            android:name=".alarmmanager.Splash"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
+
+        <activity
             android:name=".alarmmanager.ClockAlarmActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity android:name=".alarmmanager.imagedisplay"></activity>
+        <activity android:name=".alarmmanager.imagedisplay"
+            ></activity>
+
         <activity android:name=".alarmmanager.Classify" />
+
         <activity android:name=".alarmmanager.ChooseModel" />
+
         <activity
             android:name="com.soundcloud.android.crop.CropImageActivity"
             android:screenOrientation="portrait" />
+
+        <activity android:name=".alarmmanager.MenuOptions"/>
+
+        <activity android:name=".alarmmanager.ResultActivity"></activity>
+
+        <activity android:name=".alarmmanager.QuestionActivity"/>
     </application>
 
 </manifest>
