@@ -12,11 +12,21 @@ public class Alarm {
     private int min;
     private String tips;
     private String week;
-    private Uri soundtrack;
+    private String soundtrack;
     private int soundorvibrator;
     private int status;
     private int flag;
     private String weeklength;
+    private int alarmid;
+    private int setting;
+
+    public int getSetting() {
+        return setting;
+    }
+
+    public void setSetting(int setting) {
+        this.setting = setting;
+    }
 
     public int getAlarmid() {
         return alarmid;
@@ -26,7 +36,7 @@ public class Alarm {
         this.alarmid = alarmid;
     }
 
-    private int alarmid;
+
 
     public String getWeeklength() {
         return weeklength;
@@ -85,7 +95,7 @@ public class Alarm {
         this.week = week;
     }
 
-    public void setSoundtrack(Uri soundtrack) {
+    public void setSoundtrack(String soundtrack) {
         this.soundtrack = soundtrack;
     }
 
@@ -113,7 +123,7 @@ public class Alarm {
         return week;
     }
 
-    public Uri getSoundtrack() {
+    public String getSoundtrack() {
         return soundtrack;
     }
 

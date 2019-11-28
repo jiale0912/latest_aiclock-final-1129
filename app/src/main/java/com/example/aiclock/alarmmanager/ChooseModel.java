@@ -1,4 +1,4 @@
-package com.example.aiclock.ai;
+package com.example.aiclock.alarmmanager;
 
 import android.Manifest;
 import android.content.ContentValues;

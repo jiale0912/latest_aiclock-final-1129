@@ -22,15 +22,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".EditAlarm"></activity>
+
+        <service android:name=".alarmmanager.MusicService"
+            android:enabled="true"/>
+        <activity android:name=".EditAlarm" />
         <activity
             android:name=".SetAlarm"
             android:label="@string/set_alarm_name"
-            android:parentActivityName=".MainActivity"></activity>
+            >
+            ></activity>
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar.White">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -38,27 +42,21 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name="com.example.aiclock.alarmmanager.AlarmReceiver">
+        <receiver android:name=".alarmmanager.AlarmReceiver">
             <intent-filter>
-                <action android:name="com.loong.alarm.clock"/>
+                <action android:name="com.loong.alarm.clock" />
             </intent-filter>
         </receiver>
+
         <activity
             android:name=".alarmmanager.ClockAlarmActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            ></activity>
-        <activity android:name=".ai.imagedisplay">
-            <!--        <intent-filter>-->
-            <!--            <action android:name="android.intent.action.MAIN" />-->
-
-            <!--            <category android:name="android.intent.category.LAUNCHER" />-->
-            <!--        </intent-filter>-->
-        </activity>
-        <activity android:name=".ai.Classify"
-            ></activity>
-        <activity android:name=".ai.ChooseModel"></activity>
-        <activity android:name="com.soundcloud.android.crop.CropImageActivity" android:screenOrientation="portrait"/>
-
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity android:name=".alarmmanager.imagedisplay"></activity>
+        <activity android:name=".alarmmanager.Classify" />
+        <activity android:name=".alarmmanager.ChooseModel" />
+        <activity
+            android:name="com.soundcloud.android.crop.CropImageActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

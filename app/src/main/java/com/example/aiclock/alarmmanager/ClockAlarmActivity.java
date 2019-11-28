@@ -2,16 +2,20 @@ package com.example.aiclock.alarmmanager;
 
 import android.app.Activity;
 import android.app.Service;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.media.MediaPlayer;
+import android.media.Ringtone;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
 
 import com.example.aiclock.R;
-import com.example.aiclock.ai.imagedisplay;
 
 import java.io.IOException;
 
@@ -21,23 +25,34 @@ public class ClockAlarmActivity extends Activity {
     private Vibrator vibrator;
     private String mysound;
     private Uri soundtrack;
-
+    private Ringtone rt;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clock_alarm);
+        doBindService();
+
         String message = this.getIntent().getStringExtra("msg");
-        int flag = this.getIntent().getIntExtra("flag", 0);
-        mysound = this.getIntent().getStringExtra("soundtrack");
-        soundtrack = Uri.parse(mysound);
-        showDialogInBroadcastReceiver(message, flag, soundtrack);
+        int flag = this.getIntent().getIntExtra("flag", 1);
+//        int mysound = this.getIntent().getIntExtra("soundtrack",0);
+        String ts = this.getIntent().getStringExtra("soundtrack");
+        Uri sound = Uri.parse(ts);
+        showDialogInBroadcastReceiver(message, flag,sound);
 
 
     }
 
-    private void showDialogInBroadcastReceiver(String message, final int flag, Uri soundtrack) {
+    private void showDialogInBroadcastReceiver(String message,final int flag,Uri soundtrack) {
+//        if (flag == 1 || flag == 2) {
 
-        if (flag == 1 || flag == 2) {
+//                mediaPlayer = MediaPlayer.create(this, soundtrack);
+//                mediaPlayer.setLooping(true);
+//                mediaPlayer.start();
+
+//Intent music = new Intent();
+//        music.setClass(this,MusicService.class);
+//        music.putExtra("song",soundtrack.toString());
+//        startService(music);
             try {
                 mediaPlayer = new MediaPlayer();
 
@@ -49,33 +64,35 @@ public class ClockAlarmActivity extends Activity {
                 e.printStackTrace();
                 Log.d("Alarm error","media player cant run");
             }
-        }
+//        }
         //数组参数意义：第一个参数为等待指定时间后开始震动，震动时间为第二个参数。后边的参数依次为等待震动和震动的时间
         //第二个参数为重复次数，-1为不重复，0为一直震动
-        if (flag == 0 || flag == 2) {
+//        if (flag == 0 || flag == 2) {
             vibrator = (Vibrator) this.getSystemService(Service.VIBRATOR_SERVICE);
             vibrator.vibrate(new long[]{100, 10, 100, 600}, 0);
-        }
+
+//       }
 
         final SimpleDialog dialog = new SimpleDialog(this, R.style.Theme_dialog);
         dialog.show();
-        dialog.setTitle(soundtrack.toString());
+        dialog.setTitle("Alarm");
         dialog.setMessage(message);
         dialog.setClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (dialog.bt_confirm == v || dialog.bt_cancel == v) {
 
-                    if (flag == 1 || flag == 2) {
-                      mediaPlayer.stop();
-                       mediaPlayer.release();
-                    }
-                    else if (flag == 0 || flag == 2) {
 
-                        vibrator.cancel();
-                    }
                     Intent intent = new Intent(getApplicationContext(), imagedisplay.class);
                     startActivity(intent);
+//                    if (flag == 1 || flag == 2) {
+//                        mediaPlayer.stop();
+//                        mediaPlayer.release();
+//                    }
+//                    else if (flag == 0 || flag == 2) {
+//
+//                        vibrator.cancel();
+//                    }
                     dialog.dismiss();
                     finish();
                 }
@@ -85,5 +102,51 @@ public class ClockAlarmActivity extends Activity {
 
     }
 
+    //Bind/Unbind music service
+    private boolean mIsBound = false;
+    private MusicService mServ;
+    private ServiceConnection Scon =new ServiceConnection(){
 
+        public void onServiceConnected(ComponentName name, IBinder
+                binder) {
+            mServ = ((MusicService.ServiceBinder)binder).getService();
+        }
+
+        public void onServiceDisconnected(ComponentName name) {
+            mServ = null;
+        }
+    };
+
+    void doBindService(){
+        bindService(new Intent(this,MusicService.class),
+                Scon, Context.BIND_AUTO_CREATE);
+        mIsBound = true;
+    }
+
+    void doUnbindService()
+    {
+        if(mIsBound)
+        {
+            unbindService(Scon);
+            mIsBound = false;
+        }
+    }
+    @Override
+    protected void onResume(){
+        super.onResume();
+        if(mServ != null)
+        {
+            mServ.resumeMusic();
+        }
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+
+        doBindService();
+        Intent music = new Intent();
+        music.setClass(this,MusicService.class);
+        stopService(music);
+    }
 }

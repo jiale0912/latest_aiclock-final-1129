@@ -83,12 +83,13 @@ public class AlarmListAdapter extends ArrayAdapter<Alarm> {
         }
 
 
-        if(mAlarm.getStatus() == 1 && myweek.equals("0"))
+        if(mAlarm.getStatus() == 1 && myweek.equals("0") )
         {
             mySwitch.setChecked(true);
             Log.d("alarm checking",myweek);
             AlarmManagerUtil.setAlarm(getContext(), mAlarm.getFlag(), mAlarm.getHour(), mAlarm.getMin(), mAlarm.getAlarmid(), Integer.parseInt(myweek), mAlarm.getTips(), mAlarm.getSoundorvibrator(),mAlarm.getSoundtrack());
             Log.d("alarm setted","Setted");
+            db.updateSetting(1,mAlarm.getAlarmid());
 //            Toast.makeText(getContext(), "Alarm on", Toast.LENGTH_SHORT).show();
 //            Toast.makeText(context, "Alarm set", Toast.LENGTH_SHORT).show();
         }
@@ -97,7 +98,8 @@ public class AlarmListAdapter extends ArrayAdapter<Alarm> {
             Log.d("alarm checking",myweek);
             for (int i = 0; i < weeks.length-1; i++) {
             AlarmManagerUtil.setAlarm(getContext(), mAlarm.getFlag(), mAlarm.getHour(), mAlarm.getMin(), mAlarm.getAlarmid()+i, Integer.parseInt(weeks[i]), mAlarm.getTips(), mAlarm.getSoundorvibrator(), mAlarm.getSoundtrack());
-            alarmid++;
+
+                alarmid++;
             SharedPreferences.Editor preferencesEditor = alarm_ID.edit();
             preferencesEditor.putInt("alarmid",alarmid);
             preferencesEditor.apply();
@@ -123,35 +125,38 @@ public class AlarmListAdapter extends ArrayAdapter<Alarm> {
                 {
                     Log.d("alarm off",myweek);
                     AlarmManagerUtil.cancelAlarm(getContext(),mAlarm.getAlarmid());
+                    mAlarm.setStatus(0);
                     db.updateStatus(0,mAlarm.getAlarmid());
                     Toast.makeText(getContext(), "Alarm Off: Single", Toast.LENGTH_SHORT).show();
-//            Toast.makeText(getContext(), "Alarm on", Toast.LENGTH_SHORT).show();
-//            Toast.makeText(context, "Alarm set", Toast.LENGTH_SHORT).show();
+                    mAlarm.setStatus(0);
+                    //            Toast.makeText(context, "Alarm set", Toast.LENGTH_SHORT).show();
                 }
                 else if(mAlarm.getStatus()== 1 && weeks.length > 0 && !myweek.equals("0")) {
                     Log.d("alarm off",myweek);
                     for (int i = 0; i < weeks.length-1; i++) {
                         AlarmManagerUtil.cancelAlarm(getContext(),mAlarm.getAlarmid()+i);
+                        mAlarm.setStatus(0);
                         db.updateStatus(0,mAlarm.getAlarmid());
                         Toast.makeText(getContext(), "Alarm Off: Multiple", Toast.LENGTH_SHORT).show();
-
-
 
                     }
                 }
                 else if (mAlarm.getStatus() == 0 && myweek.equals("0"))
                 {
                     AlarmManagerUtil.setAlarm(getContext(), mAlarm.getFlag(), mAlarm.getHour(), mAlarm.getMin(), mAlarm.getAlarmid(), Integer.parseInt(myweek), mAlarm.getTips(), mAlarm.getSoundorvibrator(),mAlarm.getSoundtrack());
-                      db.updateStatus(1,mAlarm.getAlarmid());
+                    mAlarm.setStatus(1);
+
+                    db.updateStatus(1,mAlarm.getAlarmid());
                     Toast.makeText(getContext(), "Alarm On: Single", Toast.LENGTH_SHORT).show();
                 }
                 else if (mAlarm.getStatus() == 0 && !myweek.equals("0") && weeks.length>0) {
                     for (int i = 0; i < weeks.length - 1; i++) {
                         AlarmManagerUtil.setAlarm(getContext(), mAlarm.getFlag(), mAlarm.getHour(), mAlarm.getMin(), mAlarm.getAlarmid() + i, Integer.parseInt(weeks[i]), mAlarm.getTips(), mAlarm.getSoundorvibrator(), mAlarm.getSoundtrack());
                     }
+                    mAlarm.setStatus(1);
                     db.updateStatus(1,mAlarm.getAlarmid());
                     Toast.makeText(getContext(), "Alarm On: Multiple", Toast.LENGTH_SHORT).show();
-
+                    notifyDataSetChanged();
                 }
 
 
@@ -159,4 +164,5 @@ public class AlarmListAdapter extends ArrayAdapter<Alarm> {
         });
         return v;
     }
+
 }

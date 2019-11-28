@@ -14,6 +14,7 @@ import java.util.Calendar;
  * Created by loonggg on 2016/3/21.
  */
 public class AlarmManagerUtil {
+ public static final String ALARM_ACTION = "com.loonggg.alarm.clock";
 
     public static void setAlarmTime(Context context, long timeInMillis, Intent intent) {
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -46,7 +47,7 @@ public class AlarmManagerUtil {
      * @param soundtrack the soundtrack for the alarm
      */
     public static void setAlarm(Context context, int flag, int hour, int minute, int id, int
-            week, String tips, int soundOrVibrator, Uri soundtrack) {
+            week, String tips, int soundOrVibrator, String soundtrack) {
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Calendar calendar = Calendar.getInstance();
         long intervalMillis = 0;
@@ -64,7 +65,7 @@ public class AlarmManagerUtil {
         intent.putExtra("msg", tips);
         intent.putExtra("id", id);
         intent.putExtra("soundOrVibrator", soundOrVibrator);
-        intent.putExtra("soundtrack",soundtrack.toString());
+        intent.putExtra("soundtrack",soundtrack);
         PendingIntent sender = PendingIntent.getBroadcast(context, id, intent, PendingIntent
                 .FLAG_CANCEL_CURRENT);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {

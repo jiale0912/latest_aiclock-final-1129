@@ -1,10 +1,11 @@
-package com.example.aiclock.ai;
+package com.example.aiclock.alarmmanager;
 
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -82,7 +83,7 @@ public class Classify extends AppCompatActivity {
     private TextView Confidence2;
     private TextView Confidence3;
     public String result1, result2, result3;
-
+    MediaPlayer mediaPlayer;
 
     // priority queue that will hold the top results from the CNN
     private PriorityQueue<Map.Entry<String, Float>> sortedLabels =

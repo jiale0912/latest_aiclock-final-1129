@@ -9,6 +9,7 @@ import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
+import com.example.aiclock.alarmmanager.AlarmManagerUtil;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.annotation.NonNull;
@@ -80,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         adapter = new AlarmListAdapter(this,R.layout.alarm_card,list_array);
 
         myList.setAdapter(adapter);
+adapter.notifyDataSetChanged();
 
         if(myList.getCount()>0)
         {
@@ -167,9 +169,13 @@ public class MainActivity extends AppCompatActivity {
                switch (index)
                {
                    case 0:
-                       Toast.makeText(MainActivity.this, "add", Toast.LENGTH_SHORT).show();
+                       Toast.makeText(MainActivity.this, "Edit", Toast.LENGTH_SHORT).show();
+                       Intent intent = new Intent(MainActivity.this ,EditAlarm.class);
+                       intent.putExtra("alarmid",alarm.getId());
+                       startActivity(intent);
                        break;
                    case 1:
+                       AlarmManagerUtil.cancelAlarm(MainActivity.this,alarm.getAlarmid());
                        myDB.delete(alarm.getId());
                        Toast.makeText(MainActivity.this, String.valueOf(alarm.getId()), Toast.LENGTH_SHORT).show();
                        onResume();
@@ -187,6 +193,8 @@ public class MainActivity extends AppCompatActivity {
                return false;
            }
        });
+
+
     }
 
 

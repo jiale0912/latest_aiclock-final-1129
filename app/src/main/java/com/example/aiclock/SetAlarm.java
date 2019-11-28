@@ -24,6 +24,7 @@ import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
 import com.example.aiclock.view.SelectRemindCyclePopup;
 import com.example.aiclock.view.SelectRemindWayPopup;
+import com.example.aiclock.view.SelectRingTonePopup;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class SetAlarm extends AppCompatActivity implements View.OnClickListener 
     private String time;
     private int cycle;
     private int ring;
+    private int rt;
     private static final int request_code= 0;
     public static final String EXTRA_REPLY = "com.example.aiclock.extra.REPLY";
     public static Uri uri;
@@ -136,6 +138,7 @@ public class SetAlarm extends AppCompatActivity implements View.OnClickListener 
                 break;
             case R.id.alarm_soundtrack:
                 choosesound();
+//                selectRingtone();
                 break;
             case R.id.btn_cancel_set:
                 finish();
@@ -237,7 +240,6 @@ public class SetAlarm extends AppCompatActivity implements View.OnClickListener 
             });
 
             builder.show();
-
         }
 
         private int checknull(){
@@ -295,7 +297,7 @@ public class SetAlarm extends AppCompatActivity implements View.OnClickListener 
                String[] times = time.split(":");
                if (cycle == 0) {//是每天的闹钟
                    alarmid++;
-                   if(db.insertData(alarmid,Integer.parseInt(times[0]), Integer.parseInt(times[1]),tv_alarm_label.getText().toString(),"0",ring,String.valueOf(uri),1,0,weeklength)){
+                   if(db.insertData(alarmid,Integer.parseInt(times[0]), Integer.parseInt(times[1]),tv_alarm_label.getText().toString(),"0",ring,uri.toString(),1,0,weeklength,0)){
 //                       AlarmManagerUtil.setAlarm(this, 0, Integer.parseInt(times[0]), Integer.parseInt
 //                               (times[1]), 0, 0, tv_alarm_label.getText().toString(), ring,uri);
                        Toast.makeText(this, uri.toString(), Toast.LENGTH_SHORT).show();
@@ -307,12 +309,11 @@ public class SetAlarm extends AppCompatActivity implements View.OnClickListener 
                }
               else if (cycle == -1) {//是只响一次的闹钟
                   alarmid++;
-                    if(db.insertData(alarmid,Integer.parseInt(times[0]), Integer.parseInt(times[1]),tv_alarm_label.getText().toString(),"0",ring,String.valueOf(uri),1,1,weeklength))
+                    if(db.insertData(alarmid,Integer.parseInt(times[0]), Integer.parseInt(times[1]),tv_alarm_label.getText().toString(),"0",ring,uri.toString(),1,1,weeklength,0))
                    {
                        Toast.makeText(this, "Alarm on", Toast.LENGTH_SHORT).show();
 //                      AlarmManagerUtil.setAlarm(this, 1, Integer.parseInt(times[0]), Integer.parseInt
 //                               (times[1]), 0, 0, tv_alarm_label.getText().toString(), ring,uri);
-                 test_sound.setText(uri.toString());
                        SharedPreferences.Editor preferencesEditor = alarm_ID.edit();
                        preferencesEditor.putInt("alarmid",alarmid);
                        preferencesEditor.apply();
@@ -327,7 +328,7 @@ public class SetAlarm extends AppCompatActivity implements View.OnClickListener 
                    String[] weeks = weeksStr.split(",");
                    ArrayList<String> week = new ArrayList<>();
                    week.add(weeksStr);
-                   if(db.insertData(alarmid,Integer.parseInt(times[0]), Integer.parseInt(times[1]),tv_alarm_label.getText().toString(),weeksStr,ring,String.valueOf(uri),1,2,weeklength))
+                   if(db.insertData(alarmid,Integer.parseInt(times[0]), Integer.parseInt(times[1]),tv_alarm_label.getText().toString(),weeksStr,ring,uri.toString(),1,2,weeklength,0))
                    {
 
                        SharedPreferences.Editor preferencesEditor = alarm_ID.edit();
@@ -443,6 +444,30 @@ public class SetAlarm extends AppCompatActivity implements View.OnClickListener 
         });
     }
 
+    public void selectRingtone() {
+        SelectRingTonePopup fp = new SelectRingTonePopup(this);
+        fp.showPopup(allLayout);
+        fp.setOnSelectRingTonePopupOnClickListerner(new SelectRingTonePopup.SelectRingTonePopupOnClickListerner()
+                 {
+
+            @Override
+            public void obtainMessage(int soundtrack) {
+                switch (soundtrack) {
+
+                    case 1:
+                        tv_soundtrack_value.setText("Ringtone 1");
+                        rt = R.raw.alarm_ring;
+                        break;
+                    case 2:
+                        tv_soundtrack_value.setText("Ringtone 2");
+                        rt = R.raw.loud_alarm_sound;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+    }
     /**
      * @param repeat 解析二进制闹钟周期
      * @param flag   flag=0返回带有汉字的周一，周二cycle等，flag=1,返回weeks(1,2,3)

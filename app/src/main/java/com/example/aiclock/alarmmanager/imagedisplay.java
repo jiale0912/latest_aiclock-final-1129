@@ -1,4 +1,4 @@
-package com.example.aiclock.ai;
+package com.example.aiclock.alarmmanager;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -167,7 +167,8 @@ imagedisplay extends AppCompatActivity {
 
 
     }
-
+    @Override
+    public void onBackPressed() { }
 
 
 }
