@@ -107,6 +107,7 @@ public class AlarmListAdapter extends ArrayAdapter<Alarm> {
 
 
             }
+            Toast.makeText(context, "on alarm", Toast.LENGTH_SHORT).show();
         }
         else
         {

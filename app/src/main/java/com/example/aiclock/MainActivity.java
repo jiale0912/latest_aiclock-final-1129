@@ -1,5 +1,8 @@
 package com.example.aiclock;
 
+import android.app.ActivityManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -16,6 +19,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,13 +47,14 @@ public class MainActivity extends AppCompatActivity {
     private DigitalClock myDigitalClock;
     private TextClock myTextClock;
     private int off;
-
+    private String[] weeks;
+    private String myweek;
 
     @Override
     protected void onResume() {
         super.onResume();
         viewData();
-        adapter = new AlarmListAdapter(this,R.layout.alarm_card,list_array);
+        adapter = new AlarmListAdapter(this, R.layout.alarm_card, list_array);
 
         myList.setAdapter(adapter);
 //        if(myList.getCount()>0)
@@ -64,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        
+
     }
 
     @Override
@@ -91,10 +97,10 @@ public class MainActivity extends AppCompatActivity {
 //        }
         viewData();
 
-        adapter = new AlarmListAdapter(this,R.layout.alarm_card,list_array);
+        adapter = new AlarmListAdapter(this, R.layout.alarm_card, list_array);
 
         myList.setAdapter(adapter);
-adapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
 
 //        if(myList.getCount()>0)
 //        {
@@ -108,8 +114,8 @@ adapter.notifyDataSetChanged();
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-           Intent intent = new Intent(MainActivity.this,SetAlarm.class);
-           startActivityForResult(intent,0);
+                Intent intent = new Intent(MainActivity.this, SetAlarm.class);
+                startActivityForResult(intent, 0);
             }
         });
 
@@ -150,84 +156,92 @@ adapter.notifyDataSetChanged();
             }
         };
 
-            myClock.setOnClickListener(new View.OnClickListener() {
-                boolean visible;
-                @Override
-                public void onClick(View v) {
+        myClock.setOnClickListener(new View.OnClickListener() {
+            boolean visible;
 
-                    TransitionManager.beginDelayedTransition(transitionsContainer,new Fade().setDuration(300).setStartDelay(100))   ;
-                    visible = !visible;
+            @Override
+            public void onClick(View v) {
+
+                TransitionManager.beginDelayedTransition(transitionsContainer, new Fade().setDuration(300).setStartDelay(100));
+                visible = !visible;
 //                    myTextClock.setVisibility(visible ? View.VISIBLE: View.GONE);
 //                    myClock.setVisibility(!visible ? View.INVISIBLE : View.GONE);
-                    if(myClock.getVisibility() == View.VISIBLE) {
-                        myClock.setVisibility(View.INVISIBLE);
-                        myTextClock.setVisibility(View.VISIBLE);
+                if (myClock.getVisibility() == View.VISIBLE) {
+                    myClock.setVisibility(View.INVISIBLE);
+                    myTextClock.setVisibility(View.VISIBLE);
 
 
-                    }
                 }
-            });
+            }
+        });
 
-            myTextClock.setOnClickListener(new View.OnClickListener() {
-                boolean visible;
-                @Override
-                public void onClick(View v) {
-                    TransitionManager.beginDelayedTransition(transitionsContainer,new Fade().setDuration(300).setStartDelay(100))   ;
-                    visible = !visible;
+        myTextClock.setOnClickListener(new View.OnClickListener() {
+            boolean visible;
 
-                    if(myTextClock.getVisibility() == View.VISIBLE)
-                    {
-                        myTextClock.setVisibility(View.INVISIBLE);
-                        myClock.setVisibility(View.VISIBLE);
-                    }
+            @Override
+            public void onClick(View v) {
+                TransitionManager.beginDelayedTransition(transitionsContainer, new Fade().setDuration(300).setStartDelay(100));
+                visible = !visible;
+
+                if (myTextClock.getVisibility() == View.VISIBLE) {
+                    myTextClock.setVisibility(View.INVISIBLE);
+                    myClock.setVisibility(View.VISIBLE);
                 }
-            });
+            }
+        });
 // set creator
 
         myList.setMenuCreator(creator);
-       myList.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
-           @Override
-           public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
-               Alarm alarm = list_array.get(position);
-
-               switch (index)
-               {
-                   case 0:
-                       Toast.makeText(MainActivity.this, "Edit", Toast.LENGTH_SHORT).show();
-                       Intent intent = new Intent(MainActivity.this ,EditAlarm.class);
-                       intent.putExtra("alarmid",alarm.getId());
-                       startActivity(intent);
-                       break;
-                   case 1:
-                       AlarmManagerUtil.cancelAlarm(MainActivity.this,alarm.getAlarmid());
-                       myDB.delete(alarm.getId());
-                       Toast.makeText(MainActivity.this, String.valueOf(alarm.getId()), Toast.LENGTH_SHORT).show();
-                       onResume();
-                       viewData();
+        myList.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+                Alarm alarm = list_array.get(position);
+                myweek = alarm.getWeek();
+                weeks = myweek.split(",");
+                switch (index) {
+                    case 0:
+                        Toast.makeText(MainActivity.this, "Edit", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(MainActivity.this, EditAlarm.class);
+                        intent.putExtra("alarmid", alarm.getId());
+                        startActivity(intent);
+                        break;
+                    case 1:
+                        if (alarm.getStatus() == 1 && weeks.length > 0 && !myweek.equals("0")) {
+                            Log.d("alarm off", myweek);
+                            for (int i = 0; i < weeks.length - 1; i++) {
+                                AlarmManagerUtil.cancelAlarm(getApplicationContext(), alarm.getAlarmid() + i);
+                                Toast.makeText(MainActivity.this, "Alarm Deleted", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            AlarmManagerUtil.cancelAlarm(MainActivity.this, alarm.getAlarmid());
+                            Toast.makeText(MainActivity.this, "Alarm Deleted", Toast.LENGTH_SHORT).show();
+                        }
+                        myDB.delete(alarm.getId());
+                        Toast.makeText(MainActivity.this, String.valueOf(alarm.getId()), Toast.LENGTH_SHORT).show();
+                        onResume();
+                        viewData();
 //                       String value = String.valueOf(alarm.getId());
 //                       myDB.delete(value);
 //                       onResume();
 //                       Toast.makeText(MainActivity.this, value, Toast.LENGTH_SHORT).show();
 
                         break;
-                   default:
-                       break;
+                    default:
+                        break;
 
-               }
-               return false;
-           }
-       });
+                }
+                return false;
+            }
+        });
 
 
     }
-
 
 
     private void viewData() {
         myDbAdapter db = new myDbAdapter(this);
         list_array = db.getData();
     }
-
 
 
     @Override

@@ -1,5 +1,6 @@
 package com.example.aiclock.alarmmanager;
 
+import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.os.IBinder;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -55,6 +57,10 @@ imagedisplay extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_imagedisplay);
         doBindService();
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                + WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
+                + WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
+                + WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         mysong = this.getIntent().getStringExtra("soundtrack");
         Bundle extras = getIntent().getExtras();
         Intent music = new Intent();
@@ -260,5 +266,14 @@ imagedisplay extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        ActivityManager activityManager = (ActivityManager) getApplicationContext()
+                .getSystemService(Context.ACTIVITY_SERVICE);
+
+        activityManager.moveTaskToFront(getTaskId(), 0);
     }
 }

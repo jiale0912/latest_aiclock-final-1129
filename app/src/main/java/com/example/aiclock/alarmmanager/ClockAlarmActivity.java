@@ -2,6 +2,7 @@ package com.example.aiclock.alarmmanager;
 
 import android.app.Activity;
 import android.app.Service;
+import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Vibrator;
 import android.view.View;
+import android.view.WindowManager;
 
 import com.example.aiclock.R;
 
@@ -23,18 +25,25 @@ public class ClockAlarmActivity extends Activity {
     private String mysound;
     private Uri soundtrack2;
     private Ringtone rt;
+    private String message;
+    private int flag;
+    Uri sound;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clock_alarm);
         doBindService();
 
-        String message = this.getIntent().getStringExtra("msg");
-        int flag = this.getIntent().getIntExtra("flag", 1);
+        message = this.getIntent().getStringExtra("msg");
+        flag = this.getIntent().getIntExtra("flag", 1);
 //        int mysound = this.getIntent().getIntExtra("soundtrack",0);
         String ts = this.getIntent().getStringExtra("soundtrack");
-        Uri sound = Uri.parse(ts);
+        sound = Uri.parse(ts);
         soundtrack2 = sound;
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                + WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
+                + WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
+                + WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         showDialogInBroadcastReceiver(message, flag,sound);
 
 
@@ -147,4 +156,6 @@ public class ClockAlarmActivity extends Activity {
         music.setClass(this, MusicService.class);
         stopService(music);
     }
+
+
 }

@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.MediaStore;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -54,6 +55,10 @@ public class ChooseModel extends AppCompatActivity {
         setContentView(R.layout.activity_choose_model);
         mysong = this.getIntent().getStringExtra("soundtrack");
         doBindService();
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                + WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
+                + WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
+                + WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         Intent music = new Intent();
         music.setClass(this,MusicService.class);
         music.putExtra("soundtrack",mysong);
