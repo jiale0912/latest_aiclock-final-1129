@@ -14,17 +14,27 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.aiclock.Alarm;
 import com.example.aiclock.MainActivity;
 import com.example.aiclock.R;
+import com.example.aiclock.myDbAdapter;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class
 imagedisplay extends AppCompatActivity {
     private Vibrator vibrator;
+    int id;
+    private ArrayList<Alarm> mylist = new ArrayList<>();
+   private myDbAdapter db;
+   private Alarm alarm = new Alarm();
+   private String myweeks;
+   private int alarmid;
 
     String[][] items = {
 
@@ -49,19 +59,36 @@ imagedisplay extends AppCompatActivity {
         final int random = new Random().nextInt((max - min) + 1) + min;
         boolean checkwon=false;
       public static final String MyPREFERENCES = "MyPrefs" ;
-      private String mysong;
+    private String preffile = "com.example.aiclock_tempoID" ;
+
+    private String mysong;
     SharedPreferences sharedpreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_imagedisplay);
-        doBindService();
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
                 + WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
                 + WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
                 + WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        doBindService();
+
+
+
         mysong = this.getIntent().getStringExtra("soundtrack");
+        id = this.getIntent().getIntExtra("id",0);
+        db = new myDbAdapter(getApplicationContext());
+        final SharedPreferences temppref ;
+        temppref = this.getSharedPreferences(preffile,MODE_PRIVATE);
+        alarmid = temppref.getInt("tempoID",alarmid);
+        mylist = db.getDatabyAlarmID(alarmid);
+        for (int i = 0;i< mylist.size(); i ++)
+        {
+            alarm = mylist.get(i);
+            myweeks = alarm.getWeeklength();
+        }
+        Toast.makeText(getApplicationContext(), "my id :" + alarm.getAlarmid(), Toast.LENGTH_SHORT).show();
         Bundle extras = getIntent().getExtras();
         Intent music = new Intent();
         music.setClass(this,MusicService.class);
@@ -107,6 +134,7 @@ imagedisplay extends AppCompatActivity {
                 public void onClick(View view) {
                     Intent intent = new Intent(imagedisplay.this, ChooseModel.class);
                     intent.putExtra("soundtrack",mysong);
+                    intent.putExtra("id",id);
                     startActivity(intent);
                 }
             });
@@ -135,14 +163,20 @@ imagedisplay extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
 
+
 //                        android.os.Process.killProcess(android.os.Process.myPid());
 //                        System.exit(1);
                         doUnbindService();
+                            if(myweeks.equals("Only Once"))
+                            {
+                                db.updateStatus(0,alarm.getAlarmid());
+                                alarm.setStatus(0);
+                                Intent back = new Intent(imagedisplay.this, MainActivity.class);
+                                back.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(back);
+                            }
 
 
-                        Intent back = new Intent(imagedisplay.this, MainActivity.class);
-                        back.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(back);
 
 
                     }
@@ -163,6 +197,7 @@ imagedisplay extends AppCompatActivity {
                     public void onClick(View view) {
                         Intent intent = new Intent(imagedisplay.this, ChooseModel.class);
                         intent.putExtra("soundtrack",mysong);
+                        intent.putExtra("id",id);
                         startActivity(intent);
                     }
                 });
@@ -187,6 +222,7 @@ imagedisplay extends AppCompatActivity {
                         editor.commit();
                         Intent intent = new Intent(imagedisplay.this, imagedisplay.class);
                         intent.putExtra("soundtrack", mysong);
+                        intent.putExtra("id",id);
                         startActivity(intent);
 
                     }
@@ -198,6 +234,7 @@ imagedisplay extends AppCompatActivity {
 
                             Intent intent = new Intent(imagedisplay.this, Splash.class);
                             intent.putExtra("soundtrack",mysong);
+                            intent.putExtra("id",id);
                             startActivity(intent);
 
 

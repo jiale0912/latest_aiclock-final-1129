@@ -183,17 +183,14 @@
         android:layout_gravity="center_horizontal"
         android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/set_btn"
+        <Space
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="8dp"
-            android:text="Confirm" />
+            android:layout_weight="1" />
 
         <Button
             android:id="@+id/btn_cancel_set"
+            style="@style/no"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -201,23 +198,25 @@
             android:layout_marginTop="20dp"
             android:text="Cancel" />
 
-        <Button
-            android:id="@+id/btn_viewdata"
-            android:layout_width="wrap_content"
+        <Space
+            android:layout_width="50sp"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:text="View alarm" />
+            />
 
         <Button
-            android:id="@+id/delete_data"
+            android:id="@+id/set_btn"
+            style="@style/yes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
-            android:text="Clear data" />
+            android:layout_marginRight="8dp"
+            android:text="Confirm" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
     </LinearLayout>
 
 </LinearLayout>

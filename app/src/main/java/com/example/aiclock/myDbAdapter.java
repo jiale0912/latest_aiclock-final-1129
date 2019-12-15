@@ -127,6 +127,32 @@ private Alarm cursorToAlarm(Cursor cursor){
         return mydata;
     }
 
+    public ArrayList<Alarm> getDatabyAlarmID(int id)
+    {
+        SQLiteDatabase db = myhelper.getWritableDatabase();
+        ArrayList<Alarm> mydata = new ArrayList<>();
+        String[] columns = {myDbHelper.UID, myDbHelper.ALARMID,myDbHelper.HOUR,myDbHelper.MIN,myDbHelper.TIPS,myDbHelper.SOUNDTRACK,myDbHelper.ALARMSTATUS,myDbHelper.FLAG,myDbHelper.WEEKLENGTH,myDbHelper.WEEK,myDbHelper.SET};
+//       String[] columns = {myDbHelper.ALARMID};
+        Cursor cursor =db.query(myDbHelper.TABLE_NAME,columns,myDbHelper.ALARMID+"="+id,null,null,null,null);
+        // Cursor cursor = db.query(true,myDbHelper.TABLE_NAME,columns,null,null,null,null,null,null);
+//      Cursor cursor = db.rawQuery("SELECT DISTINCT " + myDbHelper.ALARMID + " FROM " + myDbHelper.TABLE_NAME,null);
+        try
+        {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                Alarm alarm = cursorToAlarm(cursor);
+                mydata.add(alarm);
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+
+        return mydata;
+    }
     public ArrayList<Alarm> getOnAlarm(int status)
     {
         SQLiteDatabase db = myhelper.getWritableDatabase();

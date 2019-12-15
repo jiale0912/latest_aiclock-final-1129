@@ -89,7 +89,7 @@ public class AlarmManagerUtil {
      */
     private static long calMethod(int weekflag, long dateTime) {
         long time = 0;
-        //weekflag == 0表示是按天为周期性的时间间隔或者是一次行的，weekfalg非0时表示每周几的闹钟并以周为时间间隔
+        //weekflag == 0 = Once Only，weekfalg != 0 mean day of weeks
         if (weekflag != 0) {
             Calendar c = Calendar.getInstance();
             int week = c.get(Calendar.DAY_OF_WEEK);

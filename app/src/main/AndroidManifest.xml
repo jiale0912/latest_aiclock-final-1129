@@ -72,6 +72,7 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:lockTaskMode="always"/>
         <activity android:name=".alarmmanager.imagedisplay"
+            android:lockTaskMode="always"
             ></activity>
 
         <activity android:name=".alarmmanager.Classify" />

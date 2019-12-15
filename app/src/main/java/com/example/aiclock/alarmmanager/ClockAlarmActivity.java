@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.net.Uri;
@@ -19,6 +20,7 @@ import android.view.WindowManager;
 import com.example.aiclock.R;
 
 
+
 public class ClockAlarmActivity extends Activity {
     private MediaPlayer mediaPlayer;
     private Vibrator vibrator;
@@ -27,17 +29,28 @@ public class ClockAlarmActivity extends Activity {
     private Ringtone rt;
     private String message;
     private int flag;
-    Uri sound;
+    private Uri sound;
+    private int id;
+    public static final String tempoID = "tempID" ;
+    private String sharedPrefFile = "com.example.aiclock_tempoID";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clock_alarm);
         doBindService();
 
+
         message = this.getIntent().getStringExtra("msg");
         flag = this.getIntent().getIntExtra("flag", 1);
 //        int mysound = this.getIntent().getIntExtra("soundtrack",0);
         String ts = this.getIntent().getStringExtra("soundtrack");
+        id = this.getIntent().getIntExtra("id",0);
+        final SharedPreferences temppref ;
+        temppref = this.getSharedPreferences(sharedPrefFile,MODE_PRIVATE);
+        SharedPreferences.Editor preferencesEditor = temppref.edit();
+        preferencesEditor.putInt("tempoID",id);
+        preferencesEditor.apply();
         sound = Uri.parse(ts);
         soundtrack2 = sound;
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
@@ -91,6 +104,7 @@ public class ClockAlarmActivity extends Activity {
 
                     Intent intent = new Intent(getApplicationContext(), imagedisplay.class);
                     intent.putExtra("soundtrack",soundtrack2.toString());
+                    intent.putExtra("id",id);
                     startActivity(intent);
 //                    if (flag == 1 || flag == 2) {
 //                        mediaPlayer.stop();

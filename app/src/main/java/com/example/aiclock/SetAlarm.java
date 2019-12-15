@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -25,6 +27,7 @@ import com.bigkoo.pickerview.view.TimePickerView;
 import com.example.aiclock.view.SelectRemindCyclePopup;
 import com.example.aiclock.view.SelectRemindWayPopup;
 import com.example.aiclock.view.SelectRingTonePopup;
+import com.google.android.material.button.MaterialButton;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,7 +39,7 @@ public class SetAlarm extends AppCompatActivity implements View.OnClickListener 
     private RelativeLayout repeat_rl, ring_rl,label_rl,soundtrack_rl;
     private TextView tv_repeat_value, tv_ring_value,tv_alarm_label,tv_soundtrack_value;
     private LinearLayout allLayout;
-    private Button set_btn,btn_cancel_set,view_data,delete_data;
+    private Button set_btn,btn_cancel_set;
     private String time;
     private int cycle;
     private int ring;
@@ -48,16 +51,14 @@ public class SetAlarm extends AppCompatActivity implements View.OnClickListener 
     myDbAdapter db;
     private SharedPreferences alarm_ID;
     private String sharedPrefFile = "com.example.aiclock";
-
+    Animation blinkanim;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.set_alarm);
         alarm_ID = getSharedPreferences(sharedPrefFile,MODE_PRIVATE);
-        delete_data = (Button) findViewById(R.id.delete_data);
-        delete_data.setOnClickListener(this);
-        view_data = (Button) findViewById(R.id.btn_viewdata);
-        view_data.setOnClickListener(this);
+        blinkanim = AnimationUtils.loadAnimation(getApplicationContext(),
+                R.anim.button_anim);
         test_sound = (TextView) findViewById(R.id.test_sound);
         allLayout = (LinearLayout) findViewById(R.id.all_layout);
         set_btn = (Button) findViewById(R.id.set_btn);
@@ -137,7 +138,9 @@ public class SetAlarm extends AppCompatActivity implements View.OnClickListener 
                 inputLabel();
                 break;
             case R.id.set_btn:
+                set_btn.startAnimation(blinkanim);
                 setClock();
+
                 break;
             case R.id.alarm_soundtrack:
                 choosesound();
@@ -145,15 +148,6 @@ public class SetAlarm extends AppCompatActivity implements View.OnClickListener 
                 break;
             case R.id.btn_cancel_set:
                 finish();
-                break;
-            case R.id.btn_viewdata:
-                SharedPreferences.Editor preferencesEditor = alarm_ID.edit();
-                preferencesEditor.clear();
-                preferencesEditor.apply();
-                break;
-            case R.id.delete_data:
-                db.deleteall(this);
-                Toast.makeText(this, "Data cleared", Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;

@@ -19,6 +19,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         String msg = intent.getStringExtra("msg");
         long intervalMillis = intent.getLongExtra("intervalMillis", 0);
         String soundtrack = intent.getStringExtra("soundtrack");
+        int id = intent.getIntExtra("id",0);
         if (intervalMillis != 0) {
             AlarmManagerUtil.setAlarmTime(context, System.currentTimeMillis() + intervalMillis,
                     intent);
@@ -28,6 +29,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         clockIntent.putExtra("msg", msg);
         clockIntent.putExtra("flag", flag);
         clockIntent.putExtra("soundtrack",soundtrack);
+        clockIntent.putExtra("id",id);
         clockIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(clockIntent);
 

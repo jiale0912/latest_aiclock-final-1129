@@ -3,7 +3,7 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimary">@color/colorTitle</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
@@ -86,10 +86,24 @@
     </style>
 
     <style name="AppTheme.NoActionBar.White">
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="colorPrimary">@color/colorWhite</item>
+        <item name="colorPrimary">@color/colorTitle</item>
     </style>
 
+    <style name="buttonstyle" parent="Widget.AppCompat.Button.Borderless">
 
+    </style>
+    <style name="yes" parent="buttonstyle">
+        <item name="android:textColor">@color/colorLightBlue</item>
+        <item name="android:background">@drawable/button_yes_bg</item>
+        <item name="android:animation">@anim/button_anim</item>
+    </style>
+    <style name="no" parent="buttonstyle">
+        <item name="android:textColor">@color/colorRed</item>
+        <item name="android:background">@drawable/button_no_bg</item>
+
+    </style>
 </resources>
