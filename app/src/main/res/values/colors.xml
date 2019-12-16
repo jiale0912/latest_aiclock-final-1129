@@ -17,4 +17,5 @@
     <color name="colorRed">#FF0000</color>
     <color name ="colorGreen"> #00ff00</color>
     <color name ="colorTitle">#00bfff</color>
+    <color name="colorEdit">#F3C602</color>
 </resources>

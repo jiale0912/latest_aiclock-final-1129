@@ -93,7 +93,7 @@
         <item name="colorPrimary">@color/colorTitle</item>
     </style>
 
-    <style name="buttonstyle" parent="Widget.AppCompat.Button.Borderless">
+    <style name="buttonstyle" parent="Widget.AppCompat.Button.Borderless.Colored">
 
     </style>
     <style name="yes" parent="buttonstyle">

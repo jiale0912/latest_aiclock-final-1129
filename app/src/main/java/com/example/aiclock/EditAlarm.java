@@ -14,6 +14,8 @@
     import android.os.Bundle;
     import android.view.LayoutInflater;
     import android.view.View;
+    import android.view.animation.Animation;
+    import android.view.animation.AnimationUtils;
     import android.widget.Button;
     import android.widget.EditText;
     import android.widget.LinearLayout;
@@ -60,7 +62,7 @@
         private  int id;
         public static Uri uri;
         private static int alarmid;
-
+        Animation blinkanim;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +79,7 @@
             label_rl = (RelativeLayout) findViewById(R.id.alarm_label);
             soundtrack_rl = (RelativeLayout) findViewById(R.id.alarm_soundtrack);
             set_btn = (Button) findViewById(R.id.set_btn);
+            blinkanim = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.button_anim);
             btn_cancel_set = (Button) findViewById(R.id.btn_cancel_set);
             tv_soundtrack_value = (TextView)findViewById(R.id.label_soundValue);
             tv_alarm_label = (TextView) findViewById(R.id.label_value);
@@ -117,6 +120,7 @@
             repeat_rl.setOnClickListener(this);
             ring_rl.setOnClickListener(this);
             set_btn.setOnClickListener(this);
+            btn_cancel_set.setOnClickListener(this);
 
 
             pvTime = new TimePickerBuilder(EditAlarm.this, new OnTimeSelectListener() {
@@ -174,7 +178,14 @@
                     selectRingWay();
                     break;
                 case R.id.set_btn:
+                    set_btn.startAnimation(blinkanim);
                     setClock(id);
+                    break;
+                case R.id.btn_cancel_set:
+                    btn_cancel_set.startAnimation(blinkanim);
+                    finish();
+                    break;
+                default:
                     break;
 
             }

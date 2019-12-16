@@ -128,17 +128,18 @@ public class MainActivity extends AppCompatActivity {
                 SwipeMenuItem openItem = new SwipeMenuItem(
                         getApplicationContext());
                 // set item background
-                openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9,
-                        0xCE)));
+                openItem.setBackground(new ColorDrawable(Color.rgb(243, 198,
+                        2)));
                 // set item width
                 openItem.setWidth(200);
                 // set item title
-                openItem.setIcon(R.drawable.ic_add_black_24dp);
+                openItem.setIcon(R.drawable.ic_action_edit);
                 // set item title fontsize
                 openItem.setTitleSize(18);
                 // set item title font color
                 openItem.setTitleColor(Color.WHITE);
                 // add to menu
+
                 menu.addMenuItem(openItem);
 
                 // create "delete" item
@@ -155,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
                 menu.addMenuItem(deleteItem);
             }
         };
+
 
         myClock.setOnClickListener(new View.OnClickListener() {
             boolean visible;
@@ -251,20 +253,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
 
 

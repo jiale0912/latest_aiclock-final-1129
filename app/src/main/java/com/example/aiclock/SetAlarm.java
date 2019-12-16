@@ -59,6 +59,7 @@ public class SetAlarm extends AppCompatActivity implements View.OnClickListener 
         alarm_ID = getSharedPreferences(sharedPrefFile,MODE_PRIVATE);
         blinkanim = AnimationUtils.loadAnimation(getApplicationContext(),
                 R.anim.button_anim);
+
         test_sound = (TextView) findViewById(R.id.test_sound);
         allLayout = (LinearLayout) findViewById(R.id.all_layout);
         set_btn = (Button) findViewById(R.id.set_btn);
@@ -138,6 +139,7 @@ public class SetAlarm extends AppCompatActivity implements View.OnClickListener 
                 inputLabel();
                 break;
             case R.id.set_btn:
+
                 set_btn.startAnimation(blinkanim);
                 setClock();
 
@@ -147,6 +149,7 @@ public class SetAlarm extends AppCompatActivity implements View.OnClickListener 
 //                selectRingtone();
                 break;
             case R.id.btn_cancel_set:
+                btn_cancel_set.startAnimation(blinkanim);
                 finish();
                 break;
             default:
