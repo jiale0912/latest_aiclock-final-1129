@@ -20,7 +20,6 @@ public class BootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
-            Toast.makeText(context, "i'm back", Toast.LENGTH_SHORT).show();
             myDbAdapter db = new myDbAdapter(context);
             list_array = db.getOnAlarm(1);
             for (int i = 0; i < list_array.size(); i++) {

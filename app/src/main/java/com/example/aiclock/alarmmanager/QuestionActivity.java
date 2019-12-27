@@ -13,9 +13,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.IBinder;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.aiclock.R;
 
@@ -39,6 +42,10 @@ public class QuestionActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                + WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
+                + WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
+                + WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         setContentView(R.layout.question_show);
         mysong = this.getIntent().getStringExtra("soundtrack");
         doBindService();
@@ -294,6 +301,39 @@ public class QuestionActivity extends Activity {
         music.setClass(this, MusicService.class);
         stopService(music);
     }
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            Toast.makeText(this, "You are Not allowed to Change the Volume Now", Toast.LENGTH_SHORT)
+                    .show();
+            return true;
+        }
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            Toast.makeText(this, "You are Not allowed to Change the Volume Now", Toast.LENGTH_SHORT)
+                    .show();
+            return true;
+        }
 
+        else {
+            return super.onKeyDown(keyCode, event);
+        }
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            Toast.makeText(this, "You are Not allowed to Change the Volume Now", Toast.LENGTH_SHORT)
+                    .show();
+            return true;
+        }
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            Toast.makeText(this, "You are Not allowed to Change the Volume Now", Toast.LENGTH_SHORT)
+                    .show();
+            return true;
+        }
+        return super.onKeyUp(keyCode, event);
+    }
+    @Override
+    public void onBackPressed() {
+    }
 }
 

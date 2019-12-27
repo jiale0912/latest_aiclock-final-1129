@@ -1,6 +1,7 @@
 package com.example.aiclock.alarmmanager;
 
 import android.Manifest;
+import android.app.KeyguardManager;
 import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
@@ -13,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.MediaStore;
+import android.view.KeyEvent;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
@@ -52,13 +54,14 @@ public class ChooseModel extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_choose_model);
-        mysong = this.getIntent().getStringExtra("soundtrack");
-        doBindService();
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
                 + WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
                 + WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
                 + WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        setContentView(R.layout.activity_choose_model);
+        mysong = this.getIntent().getStringExtra("soundtrack");
+        doBindService();
+
         Intent music = new Intent();
         music.setClass(this,MusicService.class);
         music.putExtra("soundtrack",mysong);
@@ -198,5 +201,36 @@ public class ChooseModel extends AppCompatActivity {
         Intent music = new Intent();
         music.setClass(this, MusicService.class);
         stopService(music);
+    }
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            Toast.makeText(this, "You are Not allowed to Change the Volume Now", Toast.LENGTH_SHORT)
+                    .show();
+            return true;
+        }
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            Toast.makeText(this, "You are Not allowed to Change the Volume Now", Toast.LENGTH_SHORT)
+                    .show();
+            return true;
+        }
+
+        else {
+            return super.onKeyDown(keyCode, event);
+        }
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            Toast.makeText(this, "You are Not allowed to Change the Volume Now", Toast.LENGTH_SHORT)
+                    .show();
+            return true;
+        }
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            Toast.makeText(this, "You are Not allowed to Change the Volume Now", Toast.LENGTH_SHORT)
+                    .show();
+            return true;
+        }
+        return super.onKeyUp(keyCode, event);
     }
 }

@@ -1,11 +1,15 @@
 package com.example.aiclock;
 
 import android.app.ActivityManager;
+import android.app.KeyguardManager;
+import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
@@ -13,6 +17,7 @@ import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.example.aiclock.alarmmanager.AlarmManagerUtil;
+import com.example.aiclock.alarmmanager.MusicService;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.transition.*;
 import androidx.annotation.NonNull;
@@ -20,11 +25,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.os.Handler;
+import android.os.PowerManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.DigitalClock;
@@ -33,13 +41,16 @@ import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
+
     private SwipeMenuListView myList;
     private ArrayList<Alarm> list_array;
+    private ArrayList<Alarm> on_alarm_list;
     private AlarmListAdapter adapter;
     private TextView alarminfo;
     private Switch mySwitch;
@@ -49,7 +60,16 @@ public class MainActivity extends AppCompatActivity {
     private int off;
     private String[] weeks;
     private String myweek;
+    private SharedPreferences alarm_ID;
+    private String sharedPrefFile = "com.example.aiclock";
+    int alarmid;
 
+    PowerManager pm;
+    PowerManager.WakeLock wl;
+    KeyguardManager km;
+    KeyguardManager.KeyguardLock kl;
+    String locktag = "INFO";
+    private Alarm alarm;
     @Override
     protected void onResume() {
         super.onResume();
@@ -57,6 +77,28 @@ public class MainActivity extends AppCompatActivity {
         adapter = new AlarmListAdapter(this, R.layout.alarm_card, list_array);
 
         myList.setAdapter(adapter);
+        for (int i = 0; i < on_alarm_list.size(); i++) {
+            alarm = on_alarm_list.get(i);
+            myweek = alarm.getWeek();
+            weeks = myweek.split(",");
+            if (myweek.equals("0")) {
+                AlarmManagerUtil.setAlarm(getApplicationContext(), alarm.getFlag(), alarm.getHour(), alarm.getMin(), alarm.getAlarmid(), Integer.parseInt(myweek), alarm.getTips(), alarm.getSoundorvibrator(), alarm.getSoundtrack());
+                Log.d("alarm setted", "Setted");
+
+            } else if (weeks.length > 0 && !myweek.equals("0")) {
+
+                Log.d("alarm checking", myweek);
+                for (int x = 0; x < weeks.length - 1; x++) {
+                    AlarmManagerUtil.setAlarm(getApplicationContext(), alarm.getFlag(), alarm.getHour(), alarm.getMin(), alarm.getAlarmid() + x, Integer.parseInt(weeks[x]), alarm.getTips(), alarm.getSoundorvibrator(), alarm.getSoundtrack());
+                    alarmid++;
+                    SharedPreferences.Editor preferencesEditor = alarm_ID.edit();
+                    preferencesEditor.putInt("alarmid",alarmid);
+                    preferencesEditor.apply();
+                }
+                Log.d("alarm setted", "Multiple Setted");
+
+            }
+        }
 //        if(myList.getCount()>0)
 //        {
 //            alarminfo.setText("Alarm on");
@@ -76,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         final ViewGroup transitionsContainer = (ViewGroup) findViewById(R.id.transitioncontainer);
         myTextClock = transitionsContainer.findViewById(R.id.textclock);
@@ -86,6 +129,9 @@ public class MainActivity extends AppCompatActivity {
         myTextClock = findViewById(R.id.textclock);
         myClock = findViewById(R.id.clockView);
 //        myDigitalClock = findViewById(R.id.digitalClock);
+        alarm_ID = getApplicationContext().getSharedPreferences(sharedPrefFile,MODE_PRIVATE);
+
+        alarmid = alarm_ID.getInt("alarmid",0);
         list_array = new ArrayList<>();
         myList = findViewById(R.id.alarm_list);
 //        off = this.getIntent().getIntExtra("off",0);
@@ -95,7 +141,10 @@ public class MainActivity extends AppCompatActivity {
 //                       System.exit(0);
 //                       finish();
 //        }
+
         viewData();
+        myDbAdapter db = new myDbAdapter(getApplicationContext());
+        list_array = db.getOnAlarm(1);
 
         adapter = new AlarmListAdapter(this, R.layout.alarm_card, list_array);
 
@@ -114,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Intent intent = new Intent(MainActivity.this, SetAlarm.class);
                 startActivityForResult(intent, 0);
             }
@@ -219,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(MainActivity.this, "Alarm Deleted", Toast.LENGTH_SHORT).show();
                         }
                         myDB.delete(alarm.getId());
-                        Toast.makeText(MainActivity.this, String.valueOf(alarm.getId()), Toast.LENGTH_SHORT).show();
+
                         onResume();
                         viewData();
 //                       String value = String.valueOf(alarm.getId());
@@ -243,6 +293,8 @@ public class MainActivity extends AppCompatActivity {
     private void viewData() {
         myDbAdapter db = new myDbAdapter(this);
         list_array = db.getData();
+        on_alarm_list = db.getOnAlarm(1);
+
     }
 
 
@@ -252,9 +304,6 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
-
-
-
 
 
 }

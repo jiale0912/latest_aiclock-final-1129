@@ -1,10 +1,15 @@
 package com.example.aiclock;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +25,8 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.bigkoo.pickerview.builder.TimePickerBuilder;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
@@ -32,6 +39,7 @@ import com.google.android.material.button.MaterialButton;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Set;
 
 public class SetAlarm extends AppCompatActivity implements View.OnClickListener {
     private TextView date_tv,test_sound;
@@ -39,7 +47,7 @@ public class SetAlarm extends AppCompatActivity implements View.OnClickListener 
     private RelativeLayout repeat_rl, ring_rl,label_rl,soundtrack_rl;
     private TextView tv_repeat_value, tv_ring_value,tv_alarm_label,tv_soundtrack_value;
     private LinearLayout allLayout;
-    private Button set_btn,btn_cancel_set;
+    private Button set_btn,btn_cancel_set,btn_unlock;
     private String time;
     private int cycle;
     private int ring;
@@ -55,6 +63,7 @@ public class SetAlarm extends AppCompatActivity implements View.OnClickListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.set_alarm);
         alarm_ID = getSharedPreferences(sharedPrefFile,MODE_PRIVATE);
         blinkanim = AnimationUtils.loadAnimation(getApplicationContext(),
@@ -79,6 +88,7 @@ public class SetAlarm extends AppCompatActivity implements View.OnClickListener 
         tv_ring_value = (TextView) findViewById(R.id.tv_ring_value);
         tv_alarm_label = (TextView) findViewById(R.id.label_value);
         tv_soundtrack_value = (TextView) findViewById(R.id.label_soundValue);
+
         alarmid = alarm_ID.getInt("alarmid",alarmid);
         db = new myDbAdapter(this);
 //        pvTime = new TimePickerView(this, TimePickerView.Type.HOURS_MINS);
@@ -152,10 +162,12 @@ public class SetAlarm extends AppCompatActivity implements View.OnClickListener 
                 btn_cancel_set.startAnimation(blinkanim);
                 finish();
                 break;
+
             default:
                 break;
         }
     }
+
 
 
 
@@ -300,7 +312,7 @@ public class SetAlarm extends AppCompatActivity implements View.OnClickListener 
                    if(db.insertData(alarmid,Integer.parseInt(times[0]), Integer.parseInt(times[1]),tv_alarm_label.getText().toString(),"0",ring,uri.toString(),1,0,weeklength,0)){
 //                       AlarmManagerUtil.setAlarm(this, 0, Integer.parseInt(times[0]), Integer.parseInt
 //                               (times[1]), 0, 0, tv_alarm_label.getText().toString(), ring,uri);
-                       Toast.makeText(this, uri.toString(), Toast.LENGTH_SHORT).show();
+                       Toast.makeText(this, "Alarm On", Toast.LENGTH_SHORT).show();
                        SharedPreferences.Editor preferencesEditor = alarm_ID.edit();
                        preferencesEditor.putInt("alarmid",alarmid);
                        preferencesEditor.apply();
@@ -345,6 +357,7 @@ public class SetAlarm extends AppCompatActivity implements View.OnClickListener 
 //                               .parseInt(times[1]), i, Integer.parseInt(weeks[i]), tv_alarm_label.getText().toString(), ring,uri);
 //                   }
                }
+               Toast.makeText(this, "alarm on", Toast.LENGTH_SHORT).show();
 //               Toast.makeText(this, uri.toString(), Toast.LENGTH_LONG).show();
 
                finish();
@@ -427,11 +440,6 @@ public class SetAlarm extends AppCompatActivity implements View.OnClickListener 
             @Override
             public void obtainMessage(int flag) {
                 switch (flag) {
-                    // Vibrate
-                    case 0:
-                        tv_ring_value.setText("Vibrate");
-                        ring = 0;
-                        break;
                     // Sound
                     case 1:
                         tv_ring_value.setText("Sound");

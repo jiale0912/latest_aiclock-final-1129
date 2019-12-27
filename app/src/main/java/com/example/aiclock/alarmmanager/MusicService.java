@@ -1,17 +1,24 @@
 package com.example.aiclock.alarmmanager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Binder;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.example.aiclock.R;
 
@@ -62,6 +69,7 @@ public class MusicService extends Service implements MediaPlayer.OnErrorListener
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
         vibrator = (Vibrator) this.getSystemService(Service.VIBRATOR_SERVICE);
         vibrator.vibrate(new long[]{100, 10, 100, 600}, 0);
        String temp = intent.getStringExtra("soundtrack");
@@ -70,17 +78,16 @@ public class MusicService extends Service implements MediaPlayer.OnErrorListener
         if(mPlayer == null) {
             try {
                 mPlayer = new MediaPlayer();
-
                 mPlayer.setDataSource(getApplicationContext(), mysong);
                 AudioManager audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
                 int currentVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
                 int maxVolume = audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
                 float percent = 1.0f;
                 int seventyVolume = (int) (maxVolume * percent);
-                audio.setStreamVolume(AudioManager.STREAM_MUSIC, seventyVolume, 0);
+                audio.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
                 mPlayer.prepare();
                 mPlayer.setLooping(true);
-                mPlayer.setVolume(1.0f,1.0f);
+                mPlayer.setVolume(0.0f,0.0f);
                 mPlayer.start();
 
             } catch (Exception e) {
@@ -172,4 +179,6 @@ public class MusicService extends Service implements MediaPlayer.OnErrorListener
         }
         return false;
     }
+
+
 }

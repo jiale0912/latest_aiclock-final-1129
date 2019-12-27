@@ -30,7 +30,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         clockIntent.putExtra("flag", flag);
         clockIntent.putExtra("soundtrack",soundtrack);
         clockIntent.putExtra("id",id);
-        clockIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        clockIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK| Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(clockIntent);
 
 

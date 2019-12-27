@@ -1,6 +1,8 @@
 package com.example.aiclock.alarmmanager;
 
 import android.app.Activity;
+import android.view.KeyEvent;
+import android.widget.Toast;
 
 public class Question extends Activity {
 
@@ -83,6 +85,40 @@ public class Question extends Activity {
         ANSWER = aNSWER;
     }
 
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            Toast.makeText(this, "You are Not allowed to Change the Volume Now", Toast.LENGTH_SHORT)
+                    .show();
+            return true;
+        }
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            Toast.makeText(this, "You are Not allowed to Change the Volume Now", Toast.LENGTH_SHORT)
+                    .show();
+            return true;
+        }
+
+        else {
+            return super.onKeyDown(keyCode, event);
+        }
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            Toast.makeText(this, "You are Not allowed to Change the Volume Now", Toast.LENGTH_SHORT)
+                    .show();
+            return true;
+        }
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            Toast.makeText(this, "You are Not allowed to Change the Volume Now", Toast.LENGTH_SHORT)
+                    .show();
+            return true;
+        }
+        return super.onKeyUp(keyCode, event);
+    }
+    @Override
+    public void onBackPressed() {
+    }
 }
 
 // @Override

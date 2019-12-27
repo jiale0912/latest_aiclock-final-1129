@@ -269,12 +269,7 @@
                 @Override
                 public void obtainMessage(int flag) {
                     switch (flag) {
-                        // 震动
-                        case 0:
-                            tv_ring.setText("Vibrate");
-                            ring = 0;
-                            break;
-                        // 铃声
+
                         case 1:
                             tv_ring.setText("Sound");
                             ring = 1;

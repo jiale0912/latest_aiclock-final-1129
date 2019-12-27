@@ -26,6 +26,7 @@
         android:layout_below="@id/selected_image"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
+        style="@style/yes"
         android:text="Classify!" />
 
     <LinearLayout

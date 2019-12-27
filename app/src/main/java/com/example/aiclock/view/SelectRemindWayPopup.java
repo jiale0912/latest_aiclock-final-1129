@@ -16,7 +16,7 @@ import com.example.aiclock.R;
 
 
 public class SelectRemindWayPopup implements OnClickListener {
-    private TextView remaind_way1, remaind_way2;
+    private TextView  remaind_way2;
     public PopupWindow mPopupWindow;
     private SelectRemindWayPopupOnClickListener selectRemindWayPopupListener;
 
@@ -55,9 +55,7 @@ public class SelectRemindWayPopup implements OnClickListener {
         View view = LayoutInflater.from(mContext).inflate(R.layout.selectremindway_pop_window,
                 null);
 
-        remaind_way1 = (TextView) view.findViewById(R.id.tv_drugway_1);
         remaind_way2 = (TextView) view.findViewById(R.id.tv_drugway_2);
-        remaind_way1.setOnClickListener(this);
         remaind_way2.setOnClickListener(this);
         return view;
     }
@@ -65,9 +63,7 @@ public class SelectRemindWayPopup implements OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_drugway_1:
-                selectRemindWayPopupListener.obtainMessage(0);
-                break;
+
             case R.id.tv_drugway_2:
                 selectRemindWayPopupListener.obtainMessage(1);
                 break;

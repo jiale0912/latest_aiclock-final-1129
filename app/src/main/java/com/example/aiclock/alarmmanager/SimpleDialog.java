@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.aiclock.R;
 
@@ -47,13 +48,7 @@ public class SimpleDialog extends Dialog {
         bt_confirm = (Button) customView.findViewById(R.id.dialog_confirm);
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            return false;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,5 +80,36 @@ public class SimpleDialog extends Dialog {
         icon.setBackgroundResource(iconResId);
 
         return this;
+    }
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            Toast.makeText(getContext(), "You are Not allowed to Change the Volume Now", Toast.LENGTH_SHORT)
+                    .show();
+            return true;
+        }
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            Toast.makeText(getContext(), "You are Not allowed to Change the Volume Now", Toast.LENGTH_SHORT)
+                    .show();
+            return true;
+        }
+
+        else {
+            return super.onKeyDown(keyCode, event);
+        }
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            Toast.makeText(getContext(), "You are Not allowed to Change the Volume Now", Toast.LENGTH_SHORT)
+                    .show();
+            return true;
+        }
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            Toast.makeText(getContext(), "You are Not allowed to Change the Volume Now", Toast.LENGTH_SHORT)
+                    .show();
+            return true;
+        }
+        return super.onKeyUp(keyCode, event);
     }
 }

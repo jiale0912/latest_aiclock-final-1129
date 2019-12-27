@@ -1,15 +1,20 @@
 package com.example.aiclock.alarmmanager;
 
 import android.app.ActivityManager;
+import android.app.ActivityOptions;
+import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -26,6 +31,7 @@ import com.example.aiclock.myDbAdapter;
 import java.util.ArrayList;
 import java.util.Random;
 
+
 public class
 imagedisplay extends AppCompatActivity {
     private Vibrator vibrator;
@@ -35,7 +41,6 @@ imagedisplay extends AppCompatActivity {
    private Alarm alarm = new Alarm();
    private String myweeks;
    private int alarmid;
-
     String[][] items = {
 
             {"desk","12 th Sept"},
@@ -49,7 +54,7 @@ imagedisplay extends AppCompatActivity {
             {"bottle","12 th Sept"},
     };
 
-        private TextView itemDisplay,test;
+        private TextView itemDisplay;
         private Button opencamera, nextItem, mathquiz ;
         private String result1, result2,result3, nextobject,object;
         private Integer count=1;
@@ -67,12 +72,13 @@ imagedisplay extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_imagedisplay);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
                 + WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
                 + WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
                 + WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        setContentView(R.layout.activity_imagedisplay);
         doBindService();
+
 
 
 
@@ -164,8 +170,7 @@ imagedisplay extends AppCompatActivity {
                     public void onClick(View view) {
 
 
-//                        android.os.Process.killProcess(android.os.Process.myPid());
-//                        System.exit(1);
+
                         doUnbindService();
                             if(myweeks.equals("Only Once"))
                             {
@@ -174,8 +179,16 @@ imagedisplay extends AppCompatActivity {
                                 Intent back = new Intent(imagedisplay.this, MainActivity.class);
                                 back.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(back);
-                            }
 
+                            }
+                            else
+
+                            {
+                                Intent back = new Intent(imagedisplay.this, MainActivity.class);
+                                back.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(back);
+
+                            }
 
 
 
@@ -308,9 +321,66 @@ imagedisplay extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
 
-        ActivityManager activityManager = (ActivityManager) getApplicationContext()
-                .getSystemService(Context.ACTIVITY_SERVICE);
+    }
 
-        activityManager.moveTaskToFront(getTaskId(), 0);
+
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            Toast.makeText(this, "You are Not allowed to Change the Volume Now", Toast.LENGTH_SHORT)
+                    .show();
+            return true;
+        }
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            Toast.makeText(this, "You are Not allowed to Change the Volume Now", Toast.LENGTH_SHORT)
+                    .show();
+            return true;
+        }
+        if (keyCode == KeyEvent.KEYCODE_APP_SWITCH)
+        {
+            Toast.makeText(this, "You are Not allowed to Change the Volume Now", Toast.LENGTH_SHORT)
+                    .show();
+            return true;
+        }
+
+        if (keyCode == KeyEvent.KEYCODE_HOME)
+        {
+            Toast.makeText(this, "You are Not allowed to Change the Volume Now", Toast.LENGTH_SHORT)
+                    .show();
+            return true;
+        }
+
+        else {
+            return super.onKeyDown(keyCode, event);
+        }
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            Toast.makeText(this, "You are Not allowed to Change the Volume Now", Toast.LENGTH_SHORT)
+                    .show();
+            return true;
+        }
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            Toast.makeText(this, "You are Not allowed to Change the Volume Now", Toast.LENGTH_SHORT)
+                    .show();
+            return true;
+        }
+        if (keyCode == KeyEvent.KEYCODE_APP_SWITCH)
+        {
+            Toast.makeText(this, "You are Not allowed to Change the Volume Now", Toast.LENGTH_SHORT)
+                    .show();
+            return true;
+        }
+
+        if (keyCode == KeyEvent.KEYCODE_HOME)
+        {
+            Toast.makeText(this, "You are Not allowed to Change the Volume Now", Toast.LENGTH_SHORT)
+                    .show();
+            return true;
+        }
+        else
+        return super.onKeyUp(keyCode, event);
     }
 }

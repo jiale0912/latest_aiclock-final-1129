@@ -47,4 +47,5 @@ dependencies {
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.8'
     implementation "com.andkulikov:transitionseverywhere:2.1.0-rc01"
 
+
 }

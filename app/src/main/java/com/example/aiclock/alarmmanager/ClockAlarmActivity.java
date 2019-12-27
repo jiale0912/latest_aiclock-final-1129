@@ -1,6 +1,8 @@
 package com.example.aiclock.alarmmanager;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
+import android.app.KeyguardManager;
 import android.app.Service;
 import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
@@ -8,12 +10,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -31,15 +37,32 @@ public class ClockAlarmActivity extends Activity {
     private int flag;
     private Uri sound;
     private int id;
+    public static final String LT= "lockTag";
     public static final String tempoID = "tempID" ;
     private String sharedPrefFile = "com.example.aiclock_tempoID";
+    PowerManager pm;
+    PowerManager.WakeLock wl;
+    KeyguardManager km;
+    KeyguardManager.KeyguardLock kl;
+    String locktag = "INFO";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                + WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
+                + WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
+                + WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        Log.i("INFO", "onCreate() in DismissLock");
+        pm = (PowerManager) getSystemService(getApplicationContext().POWER_SERVICE);
+        km=(KeyguardManager)getSystemService(getApplicationContext().KEYGUARD_SERVICE);
+        kl=km.newKeyguardLock(locktag);
+        wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP|PowerManager.ON_AFTER_RELEASE, locktag);
+        wl.acquire(); //wake up the screen
+        kl.disableKeyguard();// dismiss the keyguard
         setContentView(R.layout.activity_clock_alarm);
         doBindService();
-
 
         message = this.getIntent().getStringExtra("msg");
         flag = this.getIntent().getIntExtra("flag", 1);
@@ -53,10 +76,7 @@ public class ClockAlarmActivity extends Activity {
         preferencesEditor.apply();
         sound = Uri.parse(ts);
         soundtrack2 = sound;
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-                + WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
-                + WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
-                + WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+
         showDialogInBroadcastReceiver(message, flag,sound);
 
 
@@ -72,6 +92,11 @@ public class ClockAlarmActivity extends Activity {
         Intent music = new Intent();
         music.setClass(this, MusicService.class);
         music.putExtra("soundtrack",soundtrack.toString());
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            startForegroundService(music);
+        }
+        else
         startService(music);
 //            try {
 //                mediaPlayer = new MediaPlayer();
@@ -103,8 +128,12 @@ public class ClockAlarmActivity extends Activity {
 
 
                     Intent intent = new Intent(getApplicationContext(), imagedisplay.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
                     intent.putExtra("soundtrack",soundtrack2.toString());
-                    intent.putExtra("id",id);
+
+
+
                     startActivity(intent);
 //                    if (flag == 1 || flag == 2) {
 //                        mediaPlayer.stop();
@@ -155,9 +184,12 @@ public class ClockAlarmActivity extends Activity {
     @Override
     protected void onResume(){
         super.onResume();
+
         if(mServ != null)
         {
             mServ.resumeMusic();
+
+
         }
     }
 
@@ -170,6 +202,14 @@ public class ClockAlarmActivity extends Activity {
         music.setClass(this, MusicService.class);
         stopService(music);
     }
-
+    @Override
+    protected void onPause() {
+        // TODO Auto-generated method stub
+        super.onPause();
+        if(wl.isHeld())
+        {
+            wl.release();
+        }
+    }
 
 }

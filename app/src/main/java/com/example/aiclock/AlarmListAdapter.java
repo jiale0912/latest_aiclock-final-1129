@@ -87,27 +87,27 @@ public class AlarmListAdapter extends ArrayAdapter<Alarm> {
         {
             mySwitch.setChecked(true);
             Log.d("alarm checking",myweek);
-            AlarmManagerUtil.setAlarm(getContext(), mAlarm.getFlag(), mAlarm.getHour(), mAlarm.getMin(), mAlarm.getAlarmid(), Integer.parseInt(myweek), mAlarm.getTips(), mAlarm.getSoundorvibrator(),mAlarm.getSoundtrack());
-            Log.d("alarm setted","Setted");
-            db.updateSetting(1,mAlarm.getAlarmid());
+//            AlarmManagerUtil.setAlarm(getContext(), mAlarm.getFlag(), mAlarm.getHour(), mAlarm.getMin(), mAlarm.getAlarmid(), Integer.parseInt(myweek), mAlarm.getTips(), mAlarm.getSoundorvibrator(),mAlarm.getSoundtrack());
+//            Log.d("alarm setted","Setted");
+//            db.updateSetting(1,mAlarm.getAlarmid());
 //            Toast.makeText(getContext(), "Alarm on", Toast.LENGTH_SHORT).show();
 //            Toast.makeText(context, "Alarm set", Toast.LENGTH_SHORT).show();
         }
         else if(mAlarm.getStatus()== 1 && weeks.length > 0 && !myweek.equals("0")) {
             mySwitch.setChecked(true);
             Log.d("alarm checking",myweek);
-            for (int i = 0; i < weeks.length-1; i++) {
-            AlarmManagerUtil.setAlarm(getContext(), mAlarm.getFlag(), mAlarm.getHour(), mAlarm.getMin(), mAlarm.getAlarmid()+i, Integer.parseInt(weeks[i]), mAlarm.getTips(), mAlarm.getSoundorvibrator(), mAlarm.getSoundtrack());
-
-                alarmid++;
-            SharedPreferences.Editor preferencesEditor = alarm_ID.edit();
-            preferencesEditor.putInt("alarmid",alarmid);
-            preferencesEditor.apply();
-
-
-
-            }
-            Toast.makeText(context, "on alarm", Toast.LENGTH_SHORT).show();
+//            for (int i = 0; i < weeks.length-1; i++) {
+//            AlarmManagerUtil.setAlarm(getContext(), mAlarm.getFlag(), mAlarm.getHour(), mAlarm.getMin(), mAlarm.getAlarmid()+i, Integer.parseInt(weeks[i]), mAlarm.getTips(), mAlarm.getSoundorvibrator(), mAlarm.getSoundtrack());
+//
+//                alarmid++;
+//            SharedPreferences.Editor preferencesEditor = alarm_ID.edit();
+//            preferencesEditor.putInt("alarmid",alarmid);
+//            preferencesEditor.apply();
+//
+//
+//
+//            }
+//            Toast.makeText(context, "on alarm", Toast.LENGTH_SHORT).show();
         }
         else
         {
